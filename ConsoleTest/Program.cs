@@ -35,16 +35,23 @@ namespace ConsoleTest
                     }
                 }
 
-                using (var streamReader = new StreamReader(encryptedFile.EncryptedStream))
+                using (var streamReader = new StreamReader(new MemoryStream(encryptedFile.EncryptedStream.ToArray())))
                 {
                     Console.WriteLine(streamReader.ReadToEnd());
                 }
+
+                var signedData = SafeCloudFile.SignFile(encryptedFile.EncryptedStream,rsa.ExportParameters(true));
+                var isValid = SafeCloudFile.VerifySignedFile(encryptedFile.EncryptedStream, signedData,
+                    rsa.ExportParameters(false));
+
+                Console.WriteLine(isValid);
 
                 var decryptedStream = SafeCloudFile.Decrypt(encryptedFile.EncryptedStream, encryptedFile.UserKeys["test@o2.pl"], rsa.ExportParameters(true));
                 using (var streamReader = new StreamReader(decryptedStream))
                 {
                     Console.WriteLine(streamReader.ReadToEnd());
                 }
+
 
                 Console.ReadKey();
             }
