@@ -22,11 +22,6 @@ namespace Inzynierka_Core
             {
                 if (aes == null) throw new Exception("Error while initializing AES instance.");
 
-                //Todo Alternatywa do wbudowanego generania hasla
-                //Rfc2898DeriveBytes aesKey = new Rfc2898DeriveBytes("dsadsad",15);
-                //myAlg.EncryptedKey = key.GetBytes( myAlg.KeySize / 8);
-                //myAlg.EncryptedIV  = key.GetBytes( myAlg.BlockSize / 8);
-
                 aes.GenerateKey();
                 aes.GenerateIV();
 
@@ -37,7 +32,7 @@ namespace Inzynierka_Core
                 {
                     using (BinaryWriter swEncrypt = new BinaryWriter(csEncrypt))
                     {
-                        byte[] buffer = new byte[2048]; // read in chunks of 2KB
+                        byte[] buffer = new byte[10485760]; // read in chunks of 10MB
                         int bytesRead;
                         while ((bytesRead = plainStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
@@ -93,7 +88,7 @@ namespace Inzynierka_Core
                         {
                             using (var binaryWriter = new BinaryWriter(decryptedStream))
                             {
-                                byte[] buffer = new byte[2048]; // read in chunks of 2KB
+                                byte[] buffer = new byte[10485760]; // read in chunks of 10MB
                                 int bytesRead;
                                 while ((bytesRead = csDecrypt.Read(buffer, 0, buffer.Length)) > 0)
                                 {
