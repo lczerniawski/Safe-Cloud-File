@@ -39,7 +39,20 @@ namespace DesktopApp_Example
             if (fileService == null)
                 Environment.Exit(-1);
 
-            _fileService = FileServiceFactory.Create(fileService);
+            switch (fileService)
+            {
+                case "GoogleDrive":
+                    _fileService = new GoogleDriveFileService();
+                    break;
+                    
+                case "OneDrive":
+                    _fileService = new OneDriveFileService();
+                    break;
+
+                default:
+                    _fileService = new OwnServerFileService(_authData);
+                    break;
+            }
         }
 
         private async void MainWindow_Load(object sender, EventArgs e)

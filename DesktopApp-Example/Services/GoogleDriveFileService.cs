@@ -73,13 +73,13 @@ namespace DesktopApp_Example.Services
             FilesResource.ListRequest request = _driveService.Files.List();
             request.Fields = "*";
             do {
-                FileList files = await request.ExecuteAsync();
-                foreach (var filesFile in files.Files)
+                FileList fileList = await request.ExecuteAsync();
+                foreach (var file in fileList.Files)
                 {
-                    if(!filesFile.Name.Contains(".json"))
-                        result.Add(new ViewFile(filesFile.Id,filesFile.Name,filesFile.AppProperties?["JsonFileId"]));
+                    if(!file.Name.Contains(".json"))
+                        result.Add(new ViewFile(file.Id,file.Name,file.AppProperties?["JsonFileId"]));
                 }
-                request.PageToken = files.NextPageToken;
+                request.PageToken = fileList.NextPageToken;
             } while (!String.IsNullOrEmpty(request.PageToken));
 
             return result;

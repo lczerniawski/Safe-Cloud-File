@@ -17,7 +17,7 @@ namespace DesktopApp_Example.DTO
 
         public string Id { get; }
         public string Name { get; }
-        public string JsonFileId { get; set; }
+        public string JsonFileId { get; }
 
         public override string ToString()
         {

@@ -61,7 +61,8 @@ namespace ApiServer_Example.Services
                 TokenExpirationTime = ((DateTimeOffset)expirationTime).ToUnixTimeSeconds(),
                 Email = user.Email,
                 RsaKeys = user.RsaKeys,
-                Name = user.Name
+                Name = user.Name,
+                Id = user.Id.ToString()
             };
         }
 

@@ -14,9 +14,7 @@ namespace ApiServer_Example.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     FileName = table.Column<string>(nullable: false),
                     FileType = table.Column<string>(nullable: false),
-                    FilePath = table.Column<string>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    FileSign = table.Column<byte[]>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

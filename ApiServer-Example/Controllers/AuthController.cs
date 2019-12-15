@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -103,6 +104,9 @@ namespace ApiServer_Example.Controllers
                         { "ServerError",new []{"Tworzenie konta nie powiodło się!"}}
                     }
                 });
+
+            var userPath =  Path.Combine(Directory.GetCurrentDirectory(), userCreated.Id.ToString());
+            Directory.CreateDirectory(userPath);
 
             return NoContent();
         }

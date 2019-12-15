@@ -15,7 +15,6 @@ namespace ApiServer_Example.Domains.DTO
         public string FileType { get; set; }
         [Required]
         public IFormFile FormFile { get; set; }
-        [Required]
-        public Guid UserId { get; set; }
+        public string JsonFileId { get; set; }
     }
 }

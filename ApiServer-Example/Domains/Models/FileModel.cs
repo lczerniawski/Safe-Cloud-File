@@ -17,10 +17,7 @@ namespace ApiServer_Example.Domains.Models
         [Required] 
         public string FileType { get; set; }
         [Required]
-        public string FilePath { get; set; }
-        [Required]
         public Guid UserId { get; set; }
-        [Required] 
-        public byte[] FileSign { get; set; }
+        public string JsonFileId { get; set; }
     }
 }

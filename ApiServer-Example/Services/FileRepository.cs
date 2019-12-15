@@ -42,7 +42,7 @@ namespace ApiServer_Example.Services
         {
             if(userId.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(userId));
 
-            return await _context.Files.Where(f => f.Id == userId).ToListAsync();
+            return await _context.Files.Where(f => f.UserId == userId).ToListAsync();
         }
 
         public async Task<FileModel> GetFileByIdAsync(Guid id)

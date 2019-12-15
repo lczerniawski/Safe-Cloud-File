@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiServer_Example.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191204223513_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20191215191351_Add JsonFileId field to FileModel")]
+    partial class AddJsonFileIdfieldtoFileModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,16 +31,11 @@ namespace ApiServer_Example.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FilePath")
+                    b.Property<string>("FileType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("FileSign")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
+                    b.Property<string>("JsonFileId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")

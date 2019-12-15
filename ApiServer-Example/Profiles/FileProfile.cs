@@ -14,6 +14,7 @@ namespace ApiServer_Example.Profiles
         public FileProfile()
         {
             CreateMap<FileModel, FileDto>();
+            CreateMap<FileCreateDto, FileModel>();
         }
     }
 }
