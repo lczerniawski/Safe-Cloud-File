@@ -31,35 +31,13 @@ namespace ApiServer_Example.Controllers
                 result.Add(new UserDto
                 {
                     Email = user.Email,
+                    Name = user.Name,
                     Modulus = user.RsaKeys.Modulus,
                     Exponent = user.RsaKeys.Exponent
                 });
             }
 
             return Ok(result);
-        }
-
-        [HttpGet("{email}")]
-        public async Task<ActionResult<UserDto>> GetUserByEmail(string email)
-        {
-            var user = await _userRepository.GetUserByEmailAsync(email);
-            if(user == null)
-                return BadRequest(new ValidationErrorDto
-                {
-                    TraceId = HttpContext.TraceIdentifier,
-                    Status = StatusCodes.Status400BadRequest.ToString(),
-                    Errors = new Dictionary<string, string[]>
-                    {
-                        { "Id",new[]{"Niepoprawne id!"}}
-                    }
-                });
-
-            return Ok(new UserDto
-            {
-                Email = user.Email,
-                Modulus = user.RsaKeys.Modulus,
-                Exponent = user.RsaKeys.Exponent
-            });
         }
     }
 }

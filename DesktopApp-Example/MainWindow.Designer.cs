@@ -35,6 +35,7 @@
             this.fileContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pobierzToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuńToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonDownloadShared = new System.Windows.Forms.Button();
             this.fileContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,22 +79,33 @@
             // pobierzToolStripMenuItem
             // 
             this.pobierzToolStripMenuItem.Name = "pobierzToolStripMenuItem";
-            this.pobierzToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pobierzToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.pobierzToolStripMenuItem.Text = "Pobierz";
             this.pobierzToolStripMenuItem.Click += new System.EventHandler(this.pobierzToolStripMenuItem_Click);
             // 
             // usuńToolStripMenuItem
             // 
             this.usuńToolStripMenuItem.Name = "usuńToolStripMenuItem";
-            this.usuńToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.usuńToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.usuńToolStripMenuItem.Text = "Usuń";
             this.usuńToolStripMenuItem.Click += new System.EventHandler(this.usuńToolStripMenuItem_Click);
+            // 
+            // buttonDownloadShared
+            // 
+            this.buttonDownloadShared.Location = new System.Drawing.Point(12, 414);
+            this.buttonDownloadShared.Name = "buttonDownloadShared";
+            this.buttonDownloadShared.Size = new System.Drawing.Size(148, 23);
+            this.buttonDownloadShared.TabIndex = 4;
+            this.buttonDownloadShared.Text = "Pobierz udotępniony plik";
+            this.buttonDownloadShared.UseVisualStyleBackColor = true;
+            this.buttonDownloadShared.Click += new System.EventHandler(this.buttonDownloadShared_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonDownloadShared);
             this.Controls.Add(this.listBoxFiles);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonUpload);
@@ -115,6 +127,7 @@
         private System.Windows.Forms.ContextMenuStrip fileContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem pobierzToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usuńToolStripMenuItem;
+        private System.Windows.Forms.Button buttonDownloadShared;
     }
 }
 

@@ -12,9 +12,10 @@ namespace DesktopApp_Example.Services
 {
     public interface IFileService
     {
-        Task UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey);
+        Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey);
         Task<List<ViewFile>> GetAllFiles();
-        Task DownloadFile(string path,ViewFile file,string receiverEmail,RSAParameters receiverKey, RSAParameters senderKey);
+        Task<MemoryStream> DownloadFile(string path,ViewFile file,string receiverEmail,RSAParameters receiverKey);
+        Task<SharedDownload> DownloadShared(string encryptedFileLink, string jsonFileLink,string receiverEmail, RSAParameters receiverKey);
         Task DeleteFile(ViewFile file);
     }
 }

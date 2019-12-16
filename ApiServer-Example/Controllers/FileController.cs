@@ -16,7 +16,6 @@ namespace ApiServer_Example.Controllers
 {
     [Route("api/file")]
     [ApiController]
-    [Authorize]
     public class FileController : ControllerBase
     {
         private readonly IFileRepository _fileRepository;
@@ -31,23 +30,25 @@ namespace ApiServer_Example.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IEnumerable<FileDto>>ListAllFiles()
         {
             var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
             var clientId = authorizationHeader.GetClientId();
 
-            var files = await _fileRepository.GetAllUserFiles(Guid.Parse(clientId));
+            var files = await _fileRepository.GetAllUserFiles(clientId);
 
             return _mapper.Map<IEnumerable<FileDto>>(files);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateNewFile([FromForm]FileCreateDto fileCreateDto)
         {
             var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
             var clientId = authorizationHeader.GetClientId();
 
-            var user = await _userRepository.GetUserByIdAsync(Guid.Parse(clientId));
+            var user = await _userRepository.GetUserByIdAsync(clientId);
             var userPath =  Path.Combine(Directory.GetCurrentDirectory(), user.Id.ToString());
             var filePath = Path.Combine(userPath,fileCreateDto.FileName + fileCreateDto.FileType);
 
@@ -67,34 +68,78 @@ namespace ApiServer_Example.Controllers
                     }
                 });
 
-            var fileModel = _mapper.Map<FileModel>(fileCreateDto);
-            fileModel.UserId = Guid.Parse(clientId);
+            FileDto result;
+            if (await _fileRepository.CheckIfFileExist(fileCreateDto.FileName + fileCreateDto.FileType))
+            {
+                var file = await _fileRepository.GetFileByNameAsync(fileCreateDto.FileName + fileCreateDto.FileType);
+                result = _mapper.Map<FileDto>(file);
+            }
+            else
+            {
+                var fileModel = _mapper.Map<FileModel>(fileCreateDto);
+                fileModel.UserId = clientId;
 
-            var createdFileModel = await _fileRepository.CreateFileAsync(fileModel);
-            if(createdFileModel == null)
-                return StatusCode(StatusCodes.Status500InternalServerError,new ValidationErrorDto
+                var createdFileModel = await _fileRepository.CreateFileAsync(fileModel);
+                if(createdFileModel == null)
+                    return StatusCode(StatusCodes.Status500InternalServerError,new ValidationErrorDto
+                    {
+                        TraceId = HttpContext.TraceIdentifier,
+                        Status = StatusCodes.Status500InternalServerError.ToString(),
+                        Errors = new Dictionary<string, string[]>
+                        {
+                            { "ServerError",new[]{"Błąd podczas zapisywania pliku na serwerze!"}}
+                        }
+                    });
+
+                result = _mapper.Map<FileDto>(createdFileModel);
+                result.ShareLink = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/api/file/{result.Id}";   
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("{fileId}")]
+        public async Task<IActionResult> DownloadFile(Guid fileId)
+        {
+            var file = await _fileRepository.GetFileByIdAsync(fileId);
+            if(file == null)
+                return NotFound(new ValidationErrorDto
                 {
                     TraceId = HttpContext.TraceIdentifier,
-                    Status = StatusCodes.Status500InternalServerError.ToString(),
+                    Status = StatusCodes.Status404NotFound.ToString(),
                     Errors = new Dictionary<string, string[]>
                     {
-                        { "ServerError",new[]{"Błąd podczas zapisywania pliku na serwerze!"}}
+                        { "Unauthorized",new[]{"Plik nie istnieje!"}}
                     }
                 });
 
-            return Ok(_mapper.Map<FileDto>(createdFileModel));
+            var userPath =  Path.Combine(Directory.GetCurrentDirectory(), file.UserId.ToString());
+            var filePath = Path.Combine(userPath,file.FileName + file.FileType);
+            var stream = System.IO.File.OpenRead(filePath);
+            if(stream == null)
+                return NotFound(new ValidationErrorDto
+                {
+                    TraceId = HttpContext.TraceIdentifier,
+                    Status = StatusCodes.Status404NotFound.ToString(),
+                    Errors = new Dictionary<string, string[]>
+                    {
+                        { "NotFound",new[]{"Żądany plik nie znajduje sie na serwerze!"}}
+                    }
+                });
+
+            return File(stream, "application/octet-stream");
         }
 
         [HttpDelete("{fileId}")]
-        public async Task<IActionResult> DeleteFile(string fileId)
+        [Authorize]
+        public async Task<IActionResult> DeleteFile(Guid fileId)
         {
             var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
             var clientId = authorizationHeader.GetClientId();
 
-            var user = await _userRepository.GetUserByIdAsync(Guid.Parse(clientId));
-            var file = await _fileRepository.GetFileByIdAsync(Guid.Parse(fileId));
+            var file = await _fileRepository.GetFileByIdAsync(fileId);
 
-            if(file.UserId != user.Id)
+            if(file.UserId != clientId)
                 return Unauthorized(new ValidationErrorDto
                 {
                     TraceId = HttpContext.TraceIdentifier,
@@ -105,7 +150,7 @@ namespace ApiServer_Example.Controllers
                     }
                 });
 
-            if(!await _fileRepository.DeleteFileAsync(Guid.Parse(fileId)))
+            if(!await _fileRepository.DeleteFileAsync(fileId))
                 return StatusCode(StatusCodes.Status500InternalServerError,new ValidationErrorDto
                 {
                     TraceId = HttpContext.TraceIdentifier,
@@ -116,7 +161,7 @@ namespace ApiServer_Example.Controllers
                     }
                 });
 
-            var userPath =  Path.Combine(Directory.GetCurrentDirectory(), user.Id.ToString());
+            var userPath =  Path.Combine(Directory.GetCurrentDirectory(), clientId.ToString());
             var filePath = Path.Combine(userPath,file.FileName + file.FileType);
 
             if (!System.IO.File.Exists(filePath))

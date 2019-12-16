@@ -7,15 +7,15 @@ using Google.Apis.Upload;
 
 namespace DesktopApp_Example.DTO
 {
-    public class UploadFileDto
+    public class UploadJsonDto
     {
-        public UploadFileDto(string id, UploadStatus uploadStatus)
+        public UploadJsonDto(string id, string shareLink)
         {
             Id = id;
-            UploadStatus = uploadStatus;
+            ShareLink = shareLink;
         }
 
         public string Id { get; }
-        public UploadStatus UploadStatus { get; }
+        public string ShareLink { get; }
     }
 }

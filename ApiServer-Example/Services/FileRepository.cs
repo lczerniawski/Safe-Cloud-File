@@ -50,5 +50,17 @@ namespace ApiServer_Example.Services
             if(id.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(id));
             return await _context.Files.SingleOrDefaultAsync(f => f.Id == id);
         }
+
+        public async Task<FileModel> GetFileByNameAsync(string fileName)
+        {
+            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            return await _context.Files.SingleOrDefaultAsync(f => f.FileName + f.FileType == fileName);
+        }
+
+        public async Task<bool> CheckIfFileExist(string fileName)
+        {
+            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            return await _context.Files.SingleOrDefaultAsync(f => f.FileName + f.FileType == fileName) != null;
+        }
     }
 }

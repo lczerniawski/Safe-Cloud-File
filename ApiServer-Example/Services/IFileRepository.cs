@@ -15,5 +15,9 @@ namespace ApiServer_Example.Services
         Task<IEnumerable<FileModel>> GetAllUserFiles(Guid userId);
 
         Task<FileModel> GetFileByIdAsync(Guid id);
+
+        Task<FileModel> GetFileByNameAsync(string fileName);
+
+        Task<bool> CheckIfFileExist(string fileName);
     }
 }

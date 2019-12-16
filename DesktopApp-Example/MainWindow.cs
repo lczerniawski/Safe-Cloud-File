@@ -69,32 +69,52 @@ namespace DesktopApp_Example
 
         private async void buttonUpload_Click(object sender, EventArgs e)
         {
-            var receiverList = new List<Receiver>
-            {
-                new Receiver(_authData.Name, _authData.Email, _authData.RsaKeys.MapToRsaParameters())
-            };
+            var shareFile = new ShareFile(_authData.Token,_authData.Email);
+            var shareFileResult = shareFile.ShowDialog();
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            if (shareFileResult == DialogResult.OK)
             {
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 0;
-                openFileDialog.RestoreDirectory = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                var receiverList = new List<Receiver>
                 {
-                    var fileName = openFileDialog.SafeFileName?.Split('.').First();
-                    var fileExtension = Path.GetExtension(openFileDialog.FileName);
-                    var fileStream = openFileDialog.OpenFile() as FileStream;
+                    new Receiver(_authData.Name, _authData.Email, _authData.RsaKeys.MapToRsaParameters())
+                };
 
-                    var loader = new Loader("Uploadowanie w toku","Trwa uploadowanie pliku, proszę czekać!");
-                    loader.ControlBox = false;
-                    loader.Show();
-                    SwitchFormEnabled(false);
-                    await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters());
-                    await RefreshFileList();
-                    Invoke(new Action(loader.Close));
-                    Invoke(new Action<bool>(SwitchFormEnabled),true);
+                foreach (var shareFileSelectedUser in shareFile.SelectedUsers)
+                {
+                    receiverList.Add(new Receiver(shareFileSelectedUser.Name,shareFileSelectedUser.Email, new RSAParameters
+                    {
+                        Modulus = shareFileSelectedUser.Modulus,
+                        Exponent = shareFileSelectedUser.Exponent
+                    }));
+                }
+
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.InitialDirectory = "c:\\";
+                    openFileDialog.Filter = "All files (*.*)|*.*";
+                    openFileDialog.FilterIndex = 0;
+                    openFileDialog.RestoreDirectory = true;
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var fileName = openFileDialog.SafeFileName?.Split('.').First();
+                        var fileExtension = Path.GetExtension(openFileDialog.FileName);
+                        var fileStream = openFileDialog.OpenFile() as FileStream;
+
+                        var loader = new Loader("Uploadowanie w toku","Trwa uploadowanie pliku, proszę czekać!");
+                        loader.ControlBox = false;
+                        loader.Owner = this;
+                        loader.Show();
+                        SwitchFormEnabled(false);
+                        var shareLinks = await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters());
+                        await RefreshFileList();
+                        var linksToShareWindow = new LinksToShare(shareLinks.JsonFileLink, shareLinks.EncryptedFileLink);
+                        linksToShareWindow.ControlBox = false;
+                        linksToShareWindow.Owner = this;
+                        Invoke(new Action(loader.Close));
+                        Invoke(new Action(linksToShareWindow.Show));
+                        Invoke(new Action<bool>(SwitchFormEnabled),true);
+                    }
                 }
             }
         }
@@ -136,9 +156,15 @@ namespace DesktopApp_Example
 
                     var loader = new Loader("Pobieranie w toku","Trwa pobieranie pliku, proszę czekać!");
                     loader.ControlBox = false;
+                    loader.Owner = this;
                     loader.Show();
                     SwitchFormEnabled(false);
-                    await _fileService.DownloadFile(filePath, _selectedFile, _authData.Email, _authData.RsaKeys.MapToRsaParameters(), _authData.RsaKeys.MapToRsaParameters());
+                    using (var fileStream = new FileStream(filePath + "/" + _selectedFile.Name, FileMode.Create))
+                    {
+                        var stream = await _fileService.DownloadFile(filePath, _selectedFile, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
+                        stream.Position = 0;
+                        await stream.CopyToAsync(fileStream);
+                    }
                     Invoke(new Action(loader.Close));
                     Invoke(new Action<bool>(SwitchFormEnabled),true);
                 }
@@ -149,6 +175,7 @@ namespace DesktopApp_Example
         {
             var loader = new Loader("Usuwanie w toku","Trwa usuwanie pliku, proszę czekać!");
             loader.ControlBox = false;
+            loader.Owner = this;
             loader.Show();
             SwitchFormEnabled(false);
             await _fileService.DeleteFile(_selectedFile);
@@ -172,6 +199,13 @@ namespace DesktopApp_Example
             listBoxFiles.Enabled = isActive;
             buttonUpload.Enabled = isActive;
             fileContextMenuStrip.Enabled = isActive;
+        }
+
+        private void buttonDownloadShared_Click(object sender, EventArgs e)
+        {
+            var downloadShared = new DownloadShared(_authData,_fileService);
+            downloadShared.Owner = this;
+            downloadShared.Show();
         }
     }
 }

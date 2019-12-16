@@ -121,6 +121,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthLogic.cs" />
+    <Compile Include="DownloadShared.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DownloadShared.Designer.cs">
+      <DependentUpon>DownloadShared.cs</DependentUpon>
+    </Compile>
     <Compile Include="DTO\AuthData.cs" />
     <Compile Include="DTO\FileCreateDto.cs" />
     <Compile Include="DTO\FileData.cs" />
@@ -128,7 +134,11 @@
     <Compile Include="DTO\LoginDto.cs" />
     <Compile Include="DTO\RegisterDto.cs" />
     <Compile Include="DTO\RSAKeys.cs" />
-    <Compile Include="DTO\UploadFileDto.cs" />
+    <Compile Include="DTO\SenderPublicKey.cs" />
+    <Compile Include="DTO\SharedDownload.cs" />
+    <Compile Include="DTO\ShareLinksDto.cs" />
+    <Compile Include="DTO\UploadJsonDto.cs" />
+    <Compile Include="DTO\UserDto.cs" />
     <Compile Include="DTO\ValidationErrorDto.cs" />
     <Compile Include="DTO\ViewFile.cs" />
     <Compile Include="FileServiceSelect.cs">
@@ -140,6 +150,12 @@
     <Compile Include="Helpers\MicrosoftAuthenticationHelper.cs" />
     <Compile Include="Helpers\RSAKeysExtensionsMethods.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="LinksToShare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LinksToShare.Designer.cs">
+      <DependentUpon>LinksToShare.cs</DependentUpon>
+    </Compile>
     <Compile Include="Loader.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,8 +186,20 @@
     <Compile Include="Services\IFileService.cs" />
     <Compile Include="Services\OneDriveFileService.cs" />
     <Compile Include="Services\OwnServerFileService.cs" />
+    <Compile Include="ShareFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShareFile.Designer.cs">
+      <DependentUpon>ShareFile.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="DownloadShared.resx">
+      <DependentUpon>DownloadShared.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FileServiceSelect.resx">
       <DependentUpon>FileServiceSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LinksToShare.resx">
+      <DependentUpon>LinksToShare.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Loader.resx">
       <DependentUpon>Loader.cs</DependentUpon>
@@ -193,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ServerRegister.resx">
       <DependentUpon>ServerRegister.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShareFile.resx">
+      <DependentUpon>ShareFile.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

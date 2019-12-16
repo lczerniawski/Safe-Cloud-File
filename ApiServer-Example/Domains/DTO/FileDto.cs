@@ -13,5 +13,6 @@ namespace ApiServer_Example.Domains.DTO
         public string FileName { get; set; }
         public string FileType { get; set; }
         public string JsonFileId { get; set; }
+        public string ShareLink { get; set; }
     }
 }

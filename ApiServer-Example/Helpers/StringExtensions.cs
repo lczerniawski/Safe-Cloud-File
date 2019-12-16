@@ -8,16 +8,19 @@ namespace ApiServer_Example.Helpers
 {
     public static class StringExtensions
     {
-        public static string GetClientId(this string authorizationHeader)
+        public static Guid GetClientId(this string authorizationHeader)
         {
             var handler = new JwtSecurityTokenHandler();
 
             var header = authorizationHeader;
             var splitedHeader = header.Split(' ');
             var jsonToken = handler.ReadJwtToken(splitedHeader[1]);
-            var clientId = jsonToken.Claims.First().Value;
+            var clientIdString = jsonToken.Claims.First().Value;
 
-            if(clientId == null)
+            if(clientIdString == null)
+                throw new Exception("Bad authorization header format!");
+
+            if(!Guid.TryParse(clientIdString, out var clientId))
                 throw new Exception("Bad authorization header format!");
 
             return clientId;
