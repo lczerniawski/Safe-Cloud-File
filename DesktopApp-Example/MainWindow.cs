@@ -21,6 +21,7 @@ namespace DesktopApp_Example
         private readonly AuthData _authData;
         private readonly IFileService _fileService;
         private ViewFile _selectedFile;
+        private readonly Timer _tokenTimer = new Timer();
 
         public MainWindow()
         {
@@ -56,10 +57,27 @@ namespace DesktopApp_Example
                         break;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("Aby korzystać z aplikacji należy sie zalogować i zatwierdzić dostęp aplikacji do danych",
                     "Brak autoryzacji", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Environment.Exit(-1);
+            }
+
+            _tokenTimer.Interval = 5000;
+            _tokenTimer.Tick += TokenTimerOnTick;
+            _tokenTimer.Start();
+        }
+
+        private void TokenTimerOnTick(object sender, EventArgs e)
+        {
+            var validDate = (new DateTime(1970, 1, 1)).AddSeconds(_authData.TokenExpirationTime);
+            if (validDate < DateTime.Now)
+            {
+                _tokenTimer.Stop();
+                MessageBox.Show("Ważność twojego tokena się skonczyła zaloguj sie ponownie!", "Token nie ważny",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Environment.Exit(-1);
             }
@@ -262,6 +280,7 @@ namespace DesktopApp_Example
             listBoxFiles.Enabled = isActive;
             buttonUpload.Enabled = isActive;
             fileContextMenuStrip.Enabled = isActive;
+            buttonDownloadShared.Enabled = isActive;
         }
 
         private void buttonDownloadShared_Click(object sender, EventArgs e)
