@@ -47,7 +47,7 @@ namespace ApiServer_Example
                     {
                         ValidAudience = "apiserver-example",
                         ValidIssuer = "apiserver-example",
-                        ClockSkew = TimeSpan.FromMinutes(10),
+                        ClockSkew = TimeSpan.FromHours(24),
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
