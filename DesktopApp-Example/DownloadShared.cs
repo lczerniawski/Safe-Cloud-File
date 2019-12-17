@@ -38,8 +38,21 @@ namespace DesktopApp_Example
                     loader.Owner = this;
                     loader.Show();
                     SwitchFormEnabled(false);
+                    SharedDownload sharedDownload = null;
+                    try
+                    {
+                        sharedDownload = await _fileService.DownloadShared(textBoxFileLink.Text, textBoxJsonLink.Text, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show(
+                            "Podane Linki nie są prawidłowe, lub wystapił problem podczas pobierania pliku, sprawdz swoje linki i sproboj ponownie pozniej.",
+                            "Błąd pobierania", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    var sharedDownload = await _fileService.DownloadShared(textBoxFileLink.Text, textBoxJsonLink.Text, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
+                        loader.Close();
+                        SwitchFormEnabled(true);
+                        return;
+                    }
                     var filePath = folderBrowserDialog.SelectedPath;
                     if (File.Exists(Path.Combine(filePath,sharedDownload.FileName)))
                     {
