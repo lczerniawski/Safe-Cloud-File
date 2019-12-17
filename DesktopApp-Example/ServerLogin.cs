@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -15,6 +16,7 @@ namespace DesktopApp_Example
 {
     public partial class ServerLogin : Form
     {
+        private readonly string filePath = Path.Combine(Directory.GetCurrentDirectory(), "authdata.json");
         public AuthData AuthData { get; private set; }
 
         public ServerLogin()
@@ -27,7 +29,7 @@ namespace DesktopApp_Example
         private async void buttonLogin_Click(object sender, EventArgs e)
         {
             labelLoginErrors.Text = String.Empty;
-            changeControlsStatus(false);
+            ChangeControlsStatus(false);
 
 
             var email = textBoxEmail.Text;
@@ -50,6 +52,12 @@ namespace DesktopApp_Example
                 else
                 {
                     AuthData = JsonConvert.DeserializeObject<AuthData>(responseString);
+                    using (var fileStream = new FileStream(filePath,FileMode.Create))
+                    using (var streamWriter = new StreamWriter(fileStream))
+                    {
+                        
+                        await streamWriter.WriteAsync(responseString);
+                    }
                     Close();
                 }
             }
@@ -58,7 +66,7 @@ namespace DesktopApp_Example
                 labelLoginErrors.Text = "Błąd podczas łączenia z serwerem!";
             }
 
-            changeControlsStatus(true);
+            ChangeControlsStatus(true);
         }
 
         private void textBox_Changed(object sender, EventArgs e)
@@ -72,13 +80,37 @@ namespace DesktopApp_Example
             registerForm.ShowDialog();
         }
 
-        private void changeControlsStatus(bool isActive)
+        private void ChangeControlsStatus(bool isActive)
         {
             textBoxEmail.Enabled = isActive;
             textBoxPassword.Enabled = isActive;
             buttonLogin.Enabled = isActive;
             buttonRegister.Enabled = isActive;
             pictureBoxLoading.Visible = !isActive;
+        }
+
+        private void ServerLogin_Load(object sender, EventArgs e)
+        {
+            if (File.Exists(filePath))
+            {
+                using (var fileStream = new FileStream(filePath,FileMode.Open))
+                using (var streamReader = new StreamReader(fileStream))
+                {
+                    var authDataString = streamReader.ReadToEnd();
+                    var authData = JsonConvert.DeserializeObject<AuthData>(authDataString);
+                    var validDate = (new DateTime(1970, 1, 1)).AddSeconds(authData.TokenExpirationTime);
+                    if (validDate > DateTime.Now)
+                    {
+                        AuthData = authData;
+                        Close();
+                    }
+                    else
+                    {
+                        fileStream.Dispose();
+                        File.Delete(filePath);
+                    }
+                }
+            }
         }
     }
 }
