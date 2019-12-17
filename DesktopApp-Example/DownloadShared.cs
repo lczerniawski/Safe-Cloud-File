@@ -72,5 +72,10 @@ namespace DesktopApp_Example
             textBoxJsonLink.Enabled = isActive;
             buttonDownload.Enabled = isActive;
         }
+
+        private void textBox_TextChanged(object sender, EventArgs e)
+        {
+            buttonDownload.Enabled = textBoxFileLink.Text.Length > 0 && textBoxJsonLink.Text.Length > 0;
+        }
     }
 }

@@ -39,19 +39,29 @@ namespace DesktopApp_Example
             if (fileService == null)
                 Environment.Exit(-1);
 
-            switch (fileService)
+            try
             {
-                case "GoogleDrive":
-                    _fileService = new GoogleDriveFileService();
-                    break;
+                switch (fileService)
+                {
+                    case "GoogleDrive":
+                        _fileService = new GoogleDriveFileService();
+                        break;
                     
-                case "OneDrive":
-                    _fileService = new OneDriveFileService();
-                    break;
+                    case "OneDrive":
+                        _fileService = new OneDriveFileService();
+                        break;
 
-                default:
-                    _fileService = new OwnServerFileService(_authData);
-                    break;
+                    default:
+                        _fileService = new OwnServerFileService(_authData);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Aby korzystać z aplikacji należy sie zalogować i zatwierdzić dostęp aplikacji do danych",
+                    "Brak autoryzacji", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Environment.Exit(-1);
             }
         }
 
@@ -62,7 +72,17 @@ namespace DesktopApp_Example
             loader.Show();
             loader.Owner = this;
             SwitchFormEnabled(false);
-            await RefreshFileList();
+            try
+            {
+                await RefreshFileList();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Błąd podczas pobierania listy plików z serwera. Sprobój ponownie pózniej!",
+                    "Błąd pobieranie listy plików", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Environment.Exit(-1);
+            }
             Invoke(new Action(loader.Close));
             Invoke(new Action<bool>(SwitchFormEnabled),true);
         }
@@ -106,7 +126,18 @@ namespace DesktopApp_Example
                         loader.Owner = this;
                         loader.Show();
                         SwitchFormEnabled(false);
-                        var shareLinks = await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters());
+                        ShareLinksDto shareLinks = null;
+                        try
+                        {
+                            shareLinks = await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters());
+                        }
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show("Błąd podczas dodawania pliku na serwer. Sprobój ponownie pózniej!",
+                                "Błąd dodawania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            return;
+                        }
                         await RefreshFileList();
                         var linksToShareWindow = new LinksToShare(shareLinks.JsonFileLink, shareLinks.EncryptedFileLink);
                         linksToShareWindow.ControlBox = false;
@@ -161,7 +192,19 @@ namespace DesktopApp_Example
                     SwitchFormEnabled(false);
                     using (var fileStream = new FileStream(filePath + "/" + _selectedFile.Name, FileMode.Create))
                     {
-                        var stream = await _fileService.DownloadFile(filePath, _selectedFile, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
+                        Stream stream = null;
+                        try
+                        {
+                            stream = await _fileService.DownloadFile(filePath, _selectedFile, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Błąd podczas pobierania pliku z serwera. Sprobój ponownie pózniej!",
+                                "Błąd pobierania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            return;
+                        }
+
                         stream.Position = 0;
                         await stream.CopyToAsync(fileStream);
                     }
@@ -178,8 +221,28 @@ namespace DesktopApp_Example
             loader.Owner = this;
             loader.Show();
             SwitchFormEnabled(false);
-            await _fileService.DeleteFile(_selectedFile);
-            await RefreshFileList();
+            try
+            {
+                await _fileService.DeleteFile(_selectedFile);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Błąd podczas usuwania pliku z serwera. Sprobój ponownie pózniej!",
+                    "Błąd usuwania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+            try
+            {
+                await RefreshFileList();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Błąd podczas pobierania listy plików z serwera. Sprobój ponownie pózniej!",
+                    "Błąd pobieranie listy plików", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Environment.Exit(-1);
+            }
             Invoke(new Action(loader.Close));
             Invoke(new Action<bool>(SwitchFormEnabled),true);
         }

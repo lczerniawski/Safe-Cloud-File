@@ -31,19 +31,22 @@
             this.components = new System.ComponentModel.Container();
             this.buttonUpload = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.listBoxFiles = new System.Windows.Forms.ListBox();
             this.fileContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pobierzToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuńToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonDownloadShared = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.listBoxFiles = new System.Windows.Forms.ListBox();
             this.fileContextMenuStrip.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonUpload
             // 
-            this.buttonUpload.Location = new System.Drawing.Point(713, 415);
+            this.buttonUpload.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonUpload.Location = new System.Drawing.Point(388, 423);
             this.buttonUpload.Name = "buttonUpload";
-            this.buttonUpload.Size = new System.Drawing.Size(75, 23);
+            this.buttonUpload.Size = new System.Drawing.Size(380, 24);
             this.buttonUpload.TabIndex = 0;
             this.buttonUpload.Text = "Wgraj plik";
             this.buttonUpload.UseVisualStyleBackColor = true;
@@ -52,21 +55,14 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(345, 9);
+            this.tableLayoutPanel1.SetColumnSpan(this.label1, 2);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.Size = new System.Drawing.Size(765, 25);
             this.label1.TabIndex = 2;
             this.label1.Text = "Twoje Pliki";
-            // 
-            // listBoxFiles
-            // 
-            this.listBoxFiles.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.listBoxFiles.FormattingEnabled = true;
-            this.listBoxFiles.Location = new System.Drawing.Point(12, 38);
-            this.listBoxFiles.Name = "listBoxFiles";
-            this.listBoxFiles.Size = new System.Drawing.Size(776, 368);
-            this.listBoxFiles.TabIndex = 3;
-            this.listBoxFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxFiles_MouseDown);
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // fileContextMenuStrip
             // 
@@ -92,30 +88,60 @@
             // 
             // buttonDownloadShared
             // 
-            this.buttonDownloadShared.Location = new System.Drawing.Point(12, 414);
+            this.buttonDownloadShared.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonDownloadShared.Location = new System.Drawing.Point(3, 423);
             this.buttonDownloadShared.Name = "buttonDownloadShared";
-            this.buttonDownloadShared.Size = new System.Drawing.Size(148, 23);
+            this.buttonDownloadShared.Size = new System.Drawing.Size(379, 24);
             this.buttonDownloadShared.TabIndex = 4;
             this.buttonDownloadShared.Text = "Pobierz udotępniony plik";
             this.buttonDownloadShared.UseVisualStyleBackColor = true;
             this.buttonDownloadShared.Click += new System.EventHandler(this.buttonDownloadShared_Click);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.listBoxFiles, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.buttonUpload, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.buttonDownloadShared, 0, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.060606F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.93939F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(771, 450);
+            this.tableLayoutPanel1.TabIndex = 5;
+            // 
+            // listBoxFiles
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.listBoxFiles, 2);
+            this.listBoxFiles.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.listBoxFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBoxFiles.FormattingEnabled = true;
+            this.listBoxFiles.Location = new System.Drawing.Point(3, 28);
+            this.listBoxFiles.Name = "listBoxFiles";
+            this.listBoxFiles.Size = new System.Drawing.Size(765, 389);
+            this.listBoxFiles.TabIndex = 3;
+            this.listBoxFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBoxFiles_MouseDown);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.buttonDownloadShared);
-            this.Controls.Add(this.listBoxFiles);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.buttonUpload);
+            this.ClientSize = new System.Drawing.Size(771, 450);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "Głowne Okno";
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.fileContextMenuStrip.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -123,11 +149,12 @@
 
         private System.Windows.Forms.Button buttonUpload;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox listBoxFiles;
         private System.Windows.Forms.ContextMenuStrip fileContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem pobierzToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usuńToolStripMenuItem;
         private System.Windows.Forms.Button buttonDownloadShared;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.ListBox listBoxFiles;
     }
 }
 

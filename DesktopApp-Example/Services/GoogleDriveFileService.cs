@@ -36,8 +36,12 @@ namespace DesktopApp_Example.Services
                 ClientSecret = "C4L0BQGRM9KE6vKWeBcgTlEi"
             };
 
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(30));
+            CancellationToken ct = cts.Token;
+
             var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets, _scopes, "user",
-                CancellationToken.None, new FileDataStore(credentialPath, true)).Result;
+                ct, new FileDataStore(credentialPath, true)).Result;
 
             _driveService = new DriveService(new BaseClientService.Initializer
             {

@@ -33,65 +33,95 @@
             this.textBoxJsonLink = new System.Windows.Forms.TextBox();
             this.textBoxFileLink = new System.Windows.Forms.TextBox();
             this.buttonDownload = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(213, 9);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 13);
+            this.label1.Size = new System.Drawing.Size(398, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Link do pliku JSON";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(194, 48);
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Location = new System.Drawing.Point(3, 64);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(146, 13);
+            this.label2.Size = new System.Drawing.Size(398, 27);
             this.label2.TabIndex = 1;
             this.label2.Text = "Link do zaszyfrowanego pliku";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // textBoxJsonLink
             // 
-            this.textBoxJsonLink.Location = new System.Drawing.Point(12, 25);
+            this.textBoxJsonLink.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxJsonLink.Location = new System.Drawing.Point(3, 28);
             this.textBoxJsonLink.Name = "textBoxJsonLink";
-            this.textBoxJsonLink.Size = new System.Drawing.Size(514, 20);
+            this.textBoxJsonLink.Size = new System.Drawing.Size(398, 20);
             this.textBoxJsonLink.TabIndex = 2;
+            this.textBoxJsonLink.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // textBoxFileLink
             // 
-            this.textBoxFileLink.Location = new System.Drawing.Point(12, 64);
+            this.textBoxFileLink.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxFileLink.Location = new System.Drawing.Point(3, 94);
             this.textBoxFileLink.Name = "textBoxFileLink";
-            this.textBoxFileLink.Size = new System.Drawing.Size(514, 20);
+            this.textBoxFileLink.Size = new System.Drawing.Size(398, 20);
             this.textBoxFileLink.TabIndex = 3;
+            this.textBoxFileLink.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // buttonDownload
             // 
-            this.buttonDownload.Location = new System.Drawing.Point(227, 212);
+            this.buttonDownload.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonDownload.Enabled = false;
+            this.buttonDownload.Location = new System.Drawing.Point(3, 222);
             this.buttonDownload.Name = "buttonDownload";
-            this.buttonDownload.Size = new System.Drawing.Size(75, 23);
+            this.buttonDownload.Size = new System.Drawing.Size(398, 29);
             this.buttonDownload.TabIndex = 4;
             this.buttonDownload.Text = "Pobierz";
             this.buttonDownload.UseVisualStyleBackColor = true;
             this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.buttonDownload, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxJsonLink, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxFileLink, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 5;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.30043F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15.87983F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.1588F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 51.07296F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.87554F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(404, 254);
+            this.tableLayoutPanel1.TabIndex = 5;
+            // 
             // DownloadShared
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 249);
-            this.Controls.Add(this.buttonDownload);
-            this.Controls.Add(this.textBoxFileLink);
-            this.Controls.Add(this.textBoxJsonLink);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(404, 254);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "DownloadShared";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "DownloadShared";
+            this.Text = "Pobierz udostępniony plik";
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -102,5 +132,6 @@
         private System.Windows.Forms.TextBox textBoxJsonLink;
         private System.Windows.Forms.TextBox textBoxFileLink;
         private System.Windows.Forms.Button buttonDownload;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

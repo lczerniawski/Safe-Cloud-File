@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace DesktopApp_Example.Services
         public OneDriveFileService()
         {
             _graphServiceClient = MicrosoftAuthenticationHelper.GetAuthenticatedClient();
+            var auth = _graphServiceClient.Me.Drive.Special.AppRoot.Children.Request().GetAsync().Result;
         }
 
         public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey)
