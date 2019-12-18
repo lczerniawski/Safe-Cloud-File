@@ -50,7 +50,7 @@ namespace DesktopApp_Example.Services
             });
         }
 
-        public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey)
+        public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey, bool isShared)
         {
             var memoryStream = new MemoryStream();
             fileStream.CopyTo(memoryStream);
@@ -62,11 +62,11 @@ namespace DesktopApp_Example.Services
             var fileData = new FileData(fileSign,encryptedFile.UserKeys,new SenderPublicKey(senderKey.Exponent,senderKey.Modulus),fileName+fileExtension);
             var fileDataJson = JsonConvert.SerializeObject(fileData);
 
-            var uploadJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream());
+            var uploadJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream(),isShared);
             if(uploadJsonFileDto == null)
                 throw new Exception("Error while uploading file!");
 
-            var uploadedFileLink = await UploadFile(fileName, fileExtension, encryptedFile.EncryptedStream,uploadJsonFileDto.Id);
+            var uploadedFileLink = await UploadFile(fileName, fileExtension, encryptedFile.EncryptedStream,uploadJsonFileDto.Id,isShared);
             if(uploadedFileLink == null)
                 throw new Exception("Error while uploading file!");
 
@@ -174,7 +174,7 @@ namespace DesktopApp_Example.Services
             await _driveService.Files.Delete(file.JsonFileId).ExecuteAsync();
         }
 
-        private async Task<string> UploadFile(string fileName,string fileExtension,Stream stream,string jsonFileId)
+        private async Task<string> UploadFile(string fileName,string fileExtension,Stream stream,string jsonFileId,bool isShared)
         {
             var encryptedFileMetadata = new Google.Apis.Drive.v3.Data.File
             {
@@ -193,17 +193,14 @@ namespace DesktopApp_Example.Services
             if(result.Status != UploadStatus.Completed)
                 throw new Exception("Error while uploading encrypted file!");
 
-            Permission userPermission = new Permission();
-            userPermission.Type = "anyone";
-            userPermission.Role = "reader";
-            var permissionResult = await _driveService.Permissions.Create(userPermission,encryptedFileRequest.ResponseBody.Id).ExecuteAsync();
-            if(permissionResult.Id == null)
-                throw new Exception("Error while setting permissions to encrypted file!");
+            if (isShared)
+                await SetPermissions(encryptedFileRequest.ResponseBody.Id);
+            
 
             return encryptedFileRequest.ResponseBody.WebContentLink;
         }
 
-        private async Task<UploadJsonDto> UploadJson(string fileName,Stream stream)
+        private async Task<UploadJsonDto> UploadJson(string fileName,Stream stream,bool isShared)
         {
             var encryptedFileMetadata = new Google.Apis.Drive.v3.Data.File
             {
@@ -218,14 +215,21 @@ namespace DesktopApp_Example.Services
             if(result.Status != UploadStatus.Completed)
                 throw new Exception("Error while uploading json file!");
 
+
+            if (isShared)
+                await SetPermissions(jsonFileRequest.ResponseBody.Id);
+            
+            return new UploadJsonDto(jsonFileRequest.ResponseBody.Id, jsonFileRequest.ResponseBody.WebContentLink);
+        }
+
+        private async Task SetPermissions(string fileId)
+        {
             Permission userPermission = new Permission();
             userPermission.Type = "anyone";
             userPermission.Role = "reader";
-            var permissionResult = await _driveService.Permissions.Create(userPermission,jsonFileRequest.ResponseBody.Id).ExecuteAsync();
+            var permissionResult = await _driveService.Permissions.Create(userPermission,fileId).ExecuteAsync();
             if(permissionResult.Id == null)
-                throw new Exception("Error while setting permissions to json file!");
-
-            return new UploadJsonDto(jsonFileRequest.ResponseBody.Id, jsonFileRequest.ResponseBody.WebContentLink);
+                throw new Exception("Error while setting permissions to file!");
         }
 
         private async Task<Stream> GetFileStream(string fileLink)

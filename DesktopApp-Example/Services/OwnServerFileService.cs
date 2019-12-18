@@ -27,7 +27,7 @@ namespace DesktopApp_Example.Services
             _authData = authData;
         }
 
-        public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey)
+        public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey,bool isShared)
         {
             var memoryStream = new MemoryStream();
             fileStream.CopyTo(memoryStream);
@@ -39,11 +39,11 @@ namespace DesktopApp_Example.Services
             var fileData = new FileData(fileSign,encryptedFile.UserKeys,new SenderPublicKey(senderKey.Exponent,senderKey.Modulus),fileName+fileExtension);
             var fileDataJson = JsonConvert.SerializeObject(fileData);
 
-            var uploadJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream());
+            var uploadJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream(),isShared);
             if (uploadJsonFileDto == null)
                 throw new Exception("Error while uploading file!");
 
-            var uploadFile = await UploadFile(fileName, fileExtension, encryptedFile.EncryptedStream,uploadJsonFileDto.Id);
+            var uploadFile = await UploadFile(fileName, fileExtension, encryptedFile.EncryptedStream,uploadJsonFileDto.Id,isShared);
             if(uploadFile == null)
                 throw new Exception("Error while uploading file!");
 
@@ -144,7 +144,7 @@ namespace DesktopApp_Example.Services
             await DeleteFile(file.Id);
         }
 
-        private async Task<FileDto> UploadFile(string fileName,string fileExtension,Stream stream,string jsonFileId)
+        private async Task<FileDto> UploadFile(string fileName,string fileExtension,Stream stream,string jsonFileId,bool isShared)
         {
             using (var client = new HttpClient())
             using (var content = new MultipartFormDataContent())
@@ -157,6 +157,7 @@ namespace DesktopApp_Example.Services
                 content.Add(new StringContent(fileName),"FileName");
                 content.Add(new StringContent(fileExtension),"FileType");
                 content.Add(new StringContent(jsonFileId),"JsonFileId");
+                content.Add(new StringContent(isShared.ToString()),"IsShared");
                 var result = await client.PostAsync($"{BaseUrl}/api/file", content);
                 if(!result.IsSuccessStatusCode)
                     throw new Exception("Error while uploading file!");
@@ -167,7 +168,7 @@ namespace DesktopApp_Example.Services
             }
         }
 
-        private async Task<FileDto> UploadJson(string fileName,Stream stream)
+        private async Task<FileDto> UploadJson(string fileName,Stream stream, bool isShared)
         {
             using (var client = new HttpClient())
             using (var content = new MultipartFormDataContent())
@@ -179,6 +180,7 @@ namespace DesktopApp_Example.Services
                 content.Add(contentfile, "FormFile", $"{fileName}.json");
                 content.Add(new StringContent(fileName),"FileName");
                 content.Add(new StringContent(".json"),"FileType");
+                content.Add(new StringContent(isShared.ToString()),"IsShared");
                 var result = await client.PostAsync($"{BaseUrl}/api/file", content);
                 if(!result.IsSuccessStatusCode)
                     throw new Exception("Error while uploading file!");

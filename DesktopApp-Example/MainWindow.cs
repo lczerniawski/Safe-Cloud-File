@@ -126,6 +126,7 @@ namespace DesktopApp_Example
                     }));
                 }
 
+                var isShared = shareFile.SelectedUsers.Count > 0;
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
                     openFileDialog.InitialDirectory = "c:\\";
@@ -147,21 +148,26 @@ namespace DesktopApp_Example
                         ShareLinksDto shareLinks = null;
                         try
                         {
-                            shareLinks = await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters());
+                            shareLinks = await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters(),isShared);
                         }
-                        catch (Exception exception)
+                        catch (Exception dasdasde)
                         {
                             MessageBox.Show("Błąd podczas dodawania pliku na serwer. Sprobój ponownie pózniej!",
                                 "Błąd dodawania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                            Invoke(new Action(loader.Close));
+                            Invoke(new Action<bool>(SwitchFormEnabled), true);
                             return;
                         }
                         await RefreshFileList();
-                        var linksToShareWindow = new LinksToShare(shareLinks.JsonFileLink, shareLinks.EncryptedFileLink);
-                        linksToShareWindow.ControlBox = false;
-                        linksToShareWindow.Owner = this;
+                        if (isShared)
+                        {
+                            var linksToShareWindow = new LinksToShare(shareLinks.JsonFileLink, shareLinks.EncryptedFileLink);
+                            linksToShareWindow.ControlBox = false;
+                            linksToShareWindow.Owner = this;
+                            Invoke(new Action(linksToShareWindow.Show));
+                        }
                         Invoke(new Action(loader.Close));
-                        Invoke(new Action(linksToShareWindow.Show));
                         Invoke(new Action<bool>(SwitchFormEnabled),true);
                     }
                 }

@@ -30,7 +30,7 @@ namespace DesktopApp_Example.Services
             var auth = _graphServiceClient.Me.Drive.Special.AppRoot.Children.Request().GetAsync().Result;
         }
 
-        public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey)
+        public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey,bool isShared)
         {
             var memoryStream = new MemoryStream();
             fileStream.CopyTo(memoryStream);
@@ -42,8 +42,8 @@ namespace DesktopApp_Example.Services
             var fileData = new FileData(fileSign,encryptedFile.UserKeys,new SenderPublicKey(senderKey.Exponent,senderKey.Modulus),fileName+fileExtension);
             var fileDataJson = JsonConvert.SerializeObject(fileData);
 
-            var uploadedJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream());
-            var uploadedFileShareLink = await UploadFile(fileName, fileExtension, encryptedFile.EncryptedStream,uploadedJsonFileDto.Id);
+            var uploadedJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream(),isShared);
+            var uploadedFileShareLink = await UploadFile(fileName, fileExtension, encryptedFile.EncryptedStream,uploadedJsonFileDto.Id,isShared);
 
             return new ShareLinksDto(uploadedFileShareLink,uploadedJsonFileDto.ShareLink);
         }
@@ -143,7 +143,7 @@ namespace DesktopApp_Example.Services
             await _graphServiceClient.Me.Drive.Special.AppRoot.ItemWithPath(file.Name).Request().DeleteAsync();
         }
 
-        private async Task<string> UploadFile(string fileName, string fileExtension, Stream stream, string jsonFileId)
+        private async Task<string> UploadFile(string fileName, string fileExtension, Stream stream, string jsonFileId, bool isShared)
         {
             DriveItem uploadedFile = null;
             var uploadSession = await _graphServiceClient.Me.Drive.Special.AppRoot
@@ -166,23 +166,29 @@ namespace DesktopApp_Example.Services
                 }
             }
 
-            var type = "view";
-            var scope = "anonymous";
-            var shareLinkResponse = await _graphServiceClient.Me.Drive.Special.AppRoot.ItemWithPath(uploadedFile?.Name)
-                .CreateLink(type, scope).Request().PostAsync();
+            if (isShared)
+                return await SetPermissions(uploadedFile?.Name);
 
-            return shareLinkResponse.Link.WebUrl;
+            return null;
         }
 
-        private async Task<UploadJsonDto> UploadJson(string fileName,Stream stream)
+        private async Task<UploadJsonDto> UploadJson(string fileName,Stream stream, bool isShared)
         {
             var result = await _graphServiceClient.Me.Drive.Special.AppRoot.ItemWithPath(fileName+".json").Content.Request().PutAsync<DriveItem>(stream);
 
+            if (isShared)
+                return new UploadJsonDto(result.Id, await SetPermissions(fileName+".json"));
+
+            return new UploadJsonDto(result.Id, null);
+        }
+
+        public async Task<string> SetPermissions(string fileName)
+        {
             var type = "view";
             var scope = "anonymous";
-            var response = await _graphServiceClient.Me.Drive.Special.AppRoot.ItemWithPath(fileName+".json").CreateLink(type,scope).Request().PostAsync();
+            var response = await _graphServiceClient.Me.Drive.Special.AppRoot.ItemWithPath(fileName).CreateLink(type,scope).Request().PostAsync();
 
-            return new UploadJsonDto(result.Id, response.Link.WebUrl);
+            return response.Link.WebUrl;
         }
 
         private async Task<Stream> GetFileStream(string fileLink)
