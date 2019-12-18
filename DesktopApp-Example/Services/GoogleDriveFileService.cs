@@ -18,6 +18,7 @@ using HeyRed.Mime;
 using Inzynierka_Core;
 using Inzynierka_Core.Model;
 using Newtonsoft.Json;
+using File = System.IO.File;
 
 namespace DesktopApp_Example.Services
 {
@@ -185,41 +186,37 @@ namespace DesktopApp_Example.Services
                 }
             };
 
-            var mimeType = MimeTypesMap.GetMimeType(fileName + fileExtension);
-
-            var encryptedFileRequest = _driveService.Files.Create(encryptedFileMetadata, stream ,mimeType);
-            encryptedFileRequest.Fields = "*";
-            var result = await encryptedFileRequest.UploadAsync();
-            if(result.Status != UploadStatus.Completed)
-                throw new Exception("Error while uploading encrypted file!");
-
-            if (isShared)
-                await SetPermissions(encryptedFileRequest.ResponseBody.Id);
-            
+            var encryptedFileRequest = await Upload(fileName, encryptedFileMetadata, stream,isShared);
 
             return encryptedFileRequest.ResponseBody.WebContentLink;
         }
 
         private async Task<UploadJsonDto> UploadJson(string fileName,Stream stream,bool isShared)
         {
-            var encryptedFileMetadata = new Google.Apis.Drive.v3.Data.File
+            var jsonFileMetadata = new Google.Apis.Drive.v3.Data.File
             {
                 Name = $"{fileName}.json"
             };
 
+            var jsonFileRequest = await Upload(fileName, jsonFileMetadata, stream,isShared);
+
+            return new UploadJsonDto(jsonFileRequest.ResponseBody.Id, jsonFileRequest.ResponseBody.WebContentLink);
+        }
+
+        private async Task<FilesResource.CreateMediaUpload> Upload(string fileName,Google.Apis.Drive.v3.Data.File fileMetadata, Stream stream,bool isShared)
+        {
             var mimeType = MimeTypesMap.GetMimeType($"{fileName}.json");
 
-            var jsonFileRequest = _driveService.Files.Create(encryptedFileMetadata, stream ,mimeType);
-            jsonFileRequest.Fields = "*";
-            var result = await jsonFileRequest.UploadAsync();
+            var fileRequest = _driveService.Files.Create(fileMetadata, stream ,mimeType);
+            fileRequest.Fields = "*";
+            var result = await fileRequest.UploadAsync();
             if(result.Status != UploadStatus.Completed)
                 throw new Exception("Error while uploading json file!");
 
-
             if (isShared)
-                await SetPermissions(jsonFileRequest.ResponseBody.Id);
-            
-            return new UploadJsonDto(jsonFileRequest.ResponseBody.Id, jsonFileRequest.ResponseBody.WebContentLink);
+                await SetPermissions(fileRequest.ResponseBody.Id);
+
+            return fileRequest;
         }
 
         private async Task SetPermissions(string fileId)
