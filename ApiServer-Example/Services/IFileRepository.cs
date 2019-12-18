@@ -12,6 +12,8 @@ namespace ApiServer_Example.Services
 
         Task<bool> DeleteFileAsync(Guid id);
 
+        Task<FileModel> UpdateFile(FileModel fileModel);
+
         Task<IEnumerable<FileModel>> GetAllUserFiles(Guid userId);
 
         Task<FileModel> GetFileByIdAsync(Guid id);

@@ -72,7 +72,10 @@ namespace ApiServer_Example.Controllers
             if (await _fileRepository.CheckIfFileExist(fileCreateDto.FileName + fileCreateDto.FileType))
             {
                 var file = await _fileRepository.GetFileByNameAsync(fileCreateDto.FileName + fileCreateDto.FileType);
-                result = _mapper.Map<FileDto>(file);
+                _mapper.Map(fileCreateDto, file);
+                var updatedFileModel = await _fileRepository.UpdateFile(file);
+                result = _mapper.Map<FileDto>(updatedFileModel);
+                result.ShareLink = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/api/file/{result.Id}";
             }
             else
             {
@@ -109,9 +112,26 @@ namespace ApiServer_Example.Controllers
                     Status = StatusCodes.Status404NotFound.ToString(),
                     Errors = new Dictionary<string, string[]>
                     {
-                        { "Unauthorized",new[]{"Plik nie istnieje!"}}
+                        { "NotFound",new[]{"Plik nie istnieje!"}}
                     }
                 });
+
+
+            if (!file.IsShared)
+            {
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].ToString();
+                var clientId = authorizationHeader.GetClientId();
+                if(file.UserId != clientId)
+                    return Unauthorized(new ValidationErrorDto
+                    {
+                        TraceId = HttpContext.TraceIdentifier,
+                        Status = StatusCodes.Status401Unauthorized.ToString(),
+                        Errors = new Dictionary<string, string[]>
+                        {
+                            { "Unauthorized",new[]{"Nie masz dostępu do żądanego pliku!"}}
+                        }
+                    });
+            }
 
             var userPath =  Path.Combine(Directory.GetCurrentDirectory(), file.UserId.ToString());
             var filePath = Path.Combine(userPath,file.FileName + file.FileType);

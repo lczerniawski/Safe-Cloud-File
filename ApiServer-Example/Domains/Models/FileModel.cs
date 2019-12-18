@@ -18,6 +18,8 @@ namespace ApiServer_Example.Domains.Models
         public string FileType { get; set; }
         [Required]
         public Guid UserId { get; set; }
+        [Required]
+        public bool IsShared { get; set; }
         public string JsonFileId { get; set; }
     }
 }

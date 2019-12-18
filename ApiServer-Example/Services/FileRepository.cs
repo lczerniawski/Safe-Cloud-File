@@ -38,6 +38,16 @@ namespace ApiServer_Example.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<FileModel> UpdateFile(FileModel fileModel)
+        {
+            if (fileModel == null) throw new ArgumentNullException(nameof(fileModel));
+            var result = _context.Files.Update(fileModel);
+
+            await _context.SaveChangesAsync();
+
+            return result.Entity;
+        }
+
         public async Task<IEnumerable<FileModel>> GetAllUserFiles(Guid userId)
         {
             if(userId.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(userId));
