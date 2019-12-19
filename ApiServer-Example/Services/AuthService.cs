@@ -16,7 +16,6 @@ namespace ApiServer_Example.Services
         private readonly string _jwtSecret;
         private readonly int _jwtLifespan;
         private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
 
         public AuthService(IConfiguration configuration, IUserRepository userRepository)
         {
