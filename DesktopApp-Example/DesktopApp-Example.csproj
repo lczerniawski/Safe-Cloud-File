@@ -240,9 +240,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Inzynierka-Core\Inzynierka-Core.csproj">
+    <ProjectReference Include="..\Inzynierka-Core\SafeCloudFile-Core.csproj">
       <Project>{ccf9e09f-7334-4d6a-b48e-80714689507d}</Project>
-      <Name>Inzynierka-Core</Name>
+      <Name>SafeCloudFile-Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

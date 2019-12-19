@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inzynierka-Core", "Inzynierka-Core\Inzynierka-Core.csproj", "{CCF9E09F-7334-4D6A-B48E-80714689507D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SafeCloudFile-Core", "Inzynierka-Core\SafeCloudFile-Core.csproj", "{CCF9E09F-7334-4D6A-B48E-80714689507D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiServer-Example", "ApiServer-Example\ApiServer-Example.csproj", "{DDCA0F92-20B4-48DB-AA93-4CD3223B9F65}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inzynierka-Core-Test", "Inzynierka-Core-Test\Inzynierka-Core-Test.csproj", "{9A48EBF0-1F34-4520-937B-5DC43DC97B48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SafeCloudFile-Core-Test", "Inzynierka-Core-Test\SafeCloudFile-Core-Test.csproj", "{9A48EBF0-1F34-4520-937B-5DC43DC97B48}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApp-Example", "DesktopApp-Example\DesktopApp-Example.csproj", "{C4DAF8BF-9A9B-4744-96B3-FE7814A97D2F}"
 EndProject
