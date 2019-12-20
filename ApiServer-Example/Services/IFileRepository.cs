@@ -18,8 +18,8 @@ namespace ApiServer_Example.Services
 
         Task<FileModel> GetFileByIdAsync(Guid id);
 
-        Task<FileModel> GetFileByNameAsync(string fileName);
+        Task<FileModel> GetFileByNameAsync(string fullFileName);
 
-        Task<bool> CheckIfFileExist(string fileName);
+        Task<bool> CheckIfFileExist(string fullFileName);
     }
 }

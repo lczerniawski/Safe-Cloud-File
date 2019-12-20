@@ -42,7 +42,7 @@ namespace ApiServer_Example.Services
         {
             if (fileModel == null) throw new ArgumentNullException(nameof(fileModel));
             var result = _context.Files.Update(fileModel);
-
+                
             await _context.SaveChangesAsync();
 
             return result.Entity;
@@ -52,25 +52,25 @@ namespace ApiServer_Example.Services
         {
             if(userId.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(userId));
 
-            return await _context.Files.Where(f => f.UserId == userId).ToListAsync();
+            return await _context.Files.AsNoTracking().Where(f => f.UserId == userId).ToListAsync();
         }
 
         public async Task<FileModel> GetFileByIdAsync(Guid id)
         {
             if(id.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(id));
-            return await _context.Files.SingleOrDefaultAsync(f => f.Id == id);
+            return await _context.Files.AsNoTracking().SingleOrDefaultAsync(f => f.Id == id);
         }
 
-        public async Task<FileModel> GetFileByNameAsync(string fileName)
+        public async Task<FileModel> GetFileByNameAsync(string fullFileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-            return await _context.Files.SingleOrDefaultAsync(f => f.FileName + f.FileType == fileName);
+            if (fullFileName == null) throw new ArgumentNullException(nameof(fullFileName));
+            return await _context.Files.AsNoTracking().SingleOrDefaultAsync(f => f.FileName + f.FileType == fullFileName);
         }
 
-        public async Task<bool> CheckIfFileExist(string fileName)
+        public async Task<bool> CheckIfFileExist(string fullFileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-            return await _context.Files.SingleOrDefaultAsync(f => f.FileName + f.FileType == fileName) != null;
+            if (fullFileName == null) throw new ArgumentNullException(nameof(fullFileName));
+            return await _context.Files.AsNoTracking().SingleOrDefaultAsync(f => f.FileName + f.FileType == fullFileName) != null;
         }
     }
 }

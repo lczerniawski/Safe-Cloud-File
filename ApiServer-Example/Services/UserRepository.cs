@@ -44,21 +44,7 @@ namespace ApiServer_Example.Services
 
             return result.Entity;
         }
-
-        public async Task<bool> DeleteUserAsync(Guid id)
-        {
-            if(Guid.Empty.Equals(id)) throw new ArgumentNullException(nameof(id));
-
-            var result = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
-            if (result == null)
-                return false;
-
-            _context.Users.Remove(result);
-
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-
+        
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             return await _context.Users.ToListAsync();
@@ -69,19 +55,6 @@ namespace ApiServer_Example.Services
             if(Guid.Empty.Equals(id)) throw new ArgumentNullException(nameof(id));
 
             return await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
-        }
-
-        public async Task<bool> UpdateUserAsync(User user)
-        {
-            if (user == null) throw new ArgumentNullException(nameof(user));
-
-            var userInDb = await _context.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
-            if (userInDb == null)
-                return false;
-
-            var updatedEntity = _context.Users.Update(user);
-
-            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

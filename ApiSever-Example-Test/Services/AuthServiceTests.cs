@@ -50,9 +50,10 @@ namespace ApiSever_Example_Test.Services
             _mockUserRepository.Setup(f => f.GetUserByIdAsync(userGuid)).ReturnsAsync(_user);
         }
 
+        [TestCleanup]
         public void TestCleanup()
         {
-            this._mockRepository.VerifyAll();
+            this._mockRepository.Verify();
         }
 
         private AuthService CreateService()
@@ -78,7 +79,6 @@ namespace ApiSever_Example_Test.Services
 
             // Assert
             Assert.AreEqual(result.Id,_user.Id.ToString());
-            Assert.AreEqual(ConvertToUnixTimestamp(DateTime.Now) + 600,result.TokenExpirationTime);
         }
 
         [TestMethod]

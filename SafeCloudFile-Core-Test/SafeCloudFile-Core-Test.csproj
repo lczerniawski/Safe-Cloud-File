@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Inzynierka-Core\SafeCloudFile-Core.csproj" />
+    <ProjectReference Include="..\SafeCloudFile-Core\SafeCloudFile-Core.csproj" />
   </ItemGroup>
 
 </Project>
