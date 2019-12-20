@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SafeCloudFile-Core-Test", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApp-Example", "DesktopApp-Example\DesktopApp-Example.csproj", "{C4DAF8BF-9A9B-4744-96B3-FE7814A97D2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiSever-Example-Test", "ApiSever-Example-Test\ApiSever-Example-Test.csproj", "{6008B11B-9BDF-46A0-BC8A-223C95CD1E62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiSever-Example-Test", "ApiSever-Example-Test\ApiSever-Example-Test.csproj", "{6008B11B-9BDF-46A0-BC8A-223C95CD1E62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DekstopApp-Example-Test", "DekstopApp-Example-Test\DekstopApp-Example-Test.csproj", "{A181B44E-5D6D-4884-A44E-21522AE0FEE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{6008B11B-9BDF-46A0-BC8A-223C95CD1E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6008B11B-9BDF-46A0-BC8A-223C95CD1E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6008B11B-9BDF-46A0-BC8A-223C95CD1E62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A181B44E-5D6D-4884-A44E-21522AE0FEE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A181B44E-5D6D-4884-A44E-21522AE0FEE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A181B44E-5D6D-4884-A44E-21522AE0FEE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A181B44E-5D6D-4884-A44E-21522AE0FEE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

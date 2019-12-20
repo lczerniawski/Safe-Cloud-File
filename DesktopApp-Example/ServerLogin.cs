@@ -23,7 +23,6 @@ namespace DesktopApp_Example
         {
             InitializeComponent();
             labelLoginErrors.Text = String.Empty;
-            pictureBoxLoading.Visible = false;
         }
 
         private async void buttonLogin_Click(object sender, EventArgs e)

@@ -20,7 +20,7 @@ namespace DesktopApp_Example.Services
     public class OwnServerFileService : IFileService
     {
         private readonly AuthData _authData;
-        private readonly string BaseUrl = "https://localhost:44312";
+        private readonly string BaseUrl = "https://apiserver-example.azurewebsites.net";
 
         public OwnServerFileService(AuthData authData)
         {

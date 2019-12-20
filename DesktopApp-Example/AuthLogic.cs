@@ -11,6 +11,7 @@ namespace DesktopApp_Example
 {
     public static class AuthLogic
     {
+        private static string _baseUrl = "https://apiserver-example.azurewebsites.net";
         public static async Task<HttpResponseMessage> LoginUser(string email, string password)
         {
             using (var client = new HttpClient())
@@ -19,7 +20,7 @@ namespace DesktopApp_Example
                 var jsonLoginDto = JsonConvert.SerializeObject(loginDto);
 
                 var content = new StringContent(jsonLoginDto,Encoding.UTF8,"application/json");
-                var response = await client.PostAsync("https://localhost:44312/api/auth/login",content);
+                var response = await client.PostAsync($"{_baseUrl}/api/auth/login",content);
 
                 return response;
             }
@@ -33,7 +34,7 @@ namespace DesktopApp_Example
                 var jsonLoginDto = JsonConvert.SerializeObject(registerDto);
 
                 var content = new StringContent(jsonLoginDto,Encoding.UTF8,"application/json");
-                var response = await client.PostAsync("https://localhost:44312/api/auth/register",content);
+                var response = await client.PostAsync($"{_baseUrl}/api/auth/register",content);
 
                 return response;
             }
