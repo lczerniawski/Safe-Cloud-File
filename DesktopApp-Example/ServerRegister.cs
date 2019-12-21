@@ -32,7 +32,7 @@ namespace DesktopApp_Example
 
             try
             {
-                var response = await AuthLogic.RegisterUser(name, email, password);
+                var response = await ServerConnectionLogic.RegisterUser(name, email, password);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseString = await response.Content.ReadAsStringAsync();

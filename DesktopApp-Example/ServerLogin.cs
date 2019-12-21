@@ -36,7 +36,7 @@ namespace DesktopApp_Example
 
             try
             {
-                var response = await AuthLogic.LoginUser(email, password);
+                var response = await ServerConnectionLogic.LoginUser(email, password);
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)

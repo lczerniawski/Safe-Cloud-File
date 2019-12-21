@@ -16,7 +16,6 @@ namespace DesktopApp_Example
     public partial class ShareFile : Form
     {
         public List<UserDto> SelectedUsers { get; }
-        private readonly string BaseUrl = "https://localhost:44312";
         private readonly string _token;
         private readonly string _userEmail;
 
@@ -39,7 +38,21 @@ namespace DesktopApp_Example
                 loader.ControlBox = false;
                 loader.Show();
                 loader.Owner = this;
-                await PopulateUserList();
+                try
+                {
+                    await PopulateUserList();
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Błąd podczas pobierania listy użytkowników aplikacji. Sprobój ponownie pózniej!",
+                        "Błąd pobierania listy użytkowników", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    buttonNext.Enabled = true;
+                    listBoxUsers.Enabled = false;
+                    checkBoxShare.Checked = false;
+                    Invoke(new Action(loader.Close));
+                    return;
+                }
                 Invoke(new Action(loader.Close));
             }
             else
@@ -52,23 +65,14 @@ namespace DesktopApp_Example
         private async Task PopulateUserList()
         {
             Invoke(new Action(listBoxUsers.Items.Clear));
-            using (var client = new HttpClient())
+            var userList = await ServerConnectionLogic.GetUserList(_token);
+
+            foreach (var userDto in userList)
             {
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _token);
-
-                var result = await client.GetAsync($"{BaseUrl}/api/User");
-                if (!result.IsSuccessStatusCode)
-                    throw new Exception("Error while deleting file!");
-
-                var resultString = await result.Content.ReadAsStringAsync();
-                var userList = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(resultString);
-
-                foreach (var userDto in userList)
-                {
-                    if(!userDto.Email.Equals(_userEmail))
-                        Invoke(new Func<UserDto,int>(listBoxUsers.Items.Add), userDto);
-                }
+                if (!userDto.Email.Equals(_userEmail))
+                    Invoke(new Func<UserDto, int>(listBoxUsers.Items.Add), userDto);
             }
+            
         }
 
         private void buttonNext_Click(object sender, EventArgs e)

@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace DesktopApp_Example
 {
-    public static class AuthLogic
+    public static class ServerConnectionLogic
     {
         private static string _baseUrl = "https://apiserver-example.azurewebsites.net";
         public static async Task<HttpResponseMessage> LoginUser(string email, string password)
@@ -37,6 +37,23 @@ namespace DesktopApp_Example
                 var response = await client.PostAsync($"{_baseUrl}/api/auth/register",content);
 
                 return response;
+            }
+        }
+
+        public static async Task<IEnumerable<UserDto>> GetUserList(string token)
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+                var result = await client.GetAsync($"{_baseUrl}/api/User");
+                if (!result.IsSuccessStatusCode)
+                    throw new Exception("Error while deleting file!");
+
+                var resultString = await result.Content.ReadAsStringAsync();
+                var userList = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(resultString);
+
+                return userList;
             }
         }
     }
