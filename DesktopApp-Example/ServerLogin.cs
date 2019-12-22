@@ -16,7 +16,7 @@ namespace DesktopApp_Example
 {
     public partial class ServerLogin : Form
     {
-        private readonly string filePath = Path.Combine(Directory.GetCurrentDirectory(), "authdata.json");
+        private readonly string _filePath = Path.Combine(Directory.GetCurrentDirectory(), "authdata.json");
         public AuthData AuthData { get; private set; }
 
         public ServerLogin()
@@ -51,10 +51,9 @@ namespace DesktopApp_Example
                 else
                 {
                     AuthData = JsonConvert.DeserializeObject<AuthData>(responseString);
-                    using (var fileStream = new FileStream(filePath,FileMode.Create))
+                    using (var fileStream = new FileStream(_filePath,FileMode.Create))
                     using (var streamWriter = new StreamWriter(fileStream))
                     {
-                        
                         await streamWriter.WriteAsync(responseString);
                     }
                     Close();
@@ -90,9 +89,9 @@ namespace DesktopApp_Example
 
         private void ServerLogin_Load(object sender, EventArgs e)
         {
-            if (File.Exists(filePath))
+            if (File.Exists(_filePath))
             {
-                using (var fileStream = new FileStream(filePath,FileMode.Open))
+                using (var fileStream = new FileStream(_filePath,FileMode.Open))
                 using (var streamReader = new StreamReader(fileStream))
                 {
                     var authDataString = streamReader.ReadToEnd();
@@ -106,7 +105,7 @@ namespace DesktopApp_Example
                     else
                     {
                         fileStream.Dispose();
-                        File.Delete(filePath);
+                        File.Delete(_filePath);
                     }
                 }
             }

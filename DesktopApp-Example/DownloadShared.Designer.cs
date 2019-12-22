@@ -65,7 +65,7 @@
             // 
             this.textBoxJsonLink.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxJsonLink.Location = new System.Drawing.Point(4, 35);
-            this.textBoxJsonLink.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxJsonLink.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxJsonLink.Name = "textBoxJsonLink";
             this.textBoxJsonLink.Size = new System.Drawing.Size(531, 22);
             this.textBoxJsonLink.TabIndex = 2;
@@ -75,7 +75,7 @@
             // 
             this.textBoxFileLink.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxFileLink.Location = new System.Drawing.Point(4, 118);
-            this.textBoxFileLink.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxFileLink.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxFileLink.Name = "textBoxFileLink";
             this.textBoxFileLink.Size = new System.Drawing.Size(531, 22);
             this.textBoxFileLink.TabIndex = 3;
@@ -86,7 +86,7 @@
             this.buttonDownload.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonDownload.Enabled = false;
             this.buttonDownload.Location = new System.Drawing.Point(4, 275);
-            this.buttonDownload.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonDownload.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(531, 34);
             this.buttonDownload.TabIndex = 4;
@@ -105,7 +105,7 @@
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.30043F));
@@ -123,7 +123,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(539, 313);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "DownloadShared";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Pobierz udostępniony plik";

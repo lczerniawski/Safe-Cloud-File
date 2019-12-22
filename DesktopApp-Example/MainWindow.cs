@@ -76,7 +76,7 @@ namespace DesktopApp_Example
             if (validDate < DateTime.Now)
             {
                 _tokenTimer.Stop();
-                MessageBox.Show("Ważność twojego tokena się skonczyła zaloguj sie ponownie!", "Token nie ważny",
+                MessageBox.Show("Ważność twojego tokena skonczyła się, zaloguj się ponownie!", "Token nie ważny",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Environment.Exit(-1);
@@ -97,7 +97,7 @@ namespace DesktopApp_Example
             catch (Exception)
             {
                 MessageBox.Show("Błąd podczas pobierania listy plików z serwera. Sprobój ponownie pózniej!",
-                    "Błąd pobieranie listy plików", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Błąd pobierania listy plików", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Environment.Exit(-1);
             }
@@ -226,6 +226,8 @@ namespace DesktopApp_Example
                             MessageBox.Show("Błąd podczas pobierania pliku z serwera. Sprobój ponownie pózniej!",
                                 "Błąd pobierania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                            loader.Close();
+                            SwitchFormEnabled(true);
                             return;
                         }
 
@@ -254,6 +256,8 @@ namespace DesktopApp_Example
                 MessageBox.Show("Błąd podczas usuwania pliku z serwera. Sprobój ponownie pózniej!",
                     "Błąd usuwania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                loader.Close();
+                SwitchFormEnabled(true);
                 return;
             }
             try

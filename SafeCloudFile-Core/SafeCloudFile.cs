@@ -28,18 +28,7 @@ namespace Inzynierka_Core
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
                 var encryptedStream = new MemoryStream();
-                using (CryptoStream csEncrypt = new CryptoStream(encryptedStream, encryptor, CryptoStreamMode.Write))
-                {
-                    using (BinaryWriter swEncrypt = new BinaryWriter(csEncrypt))
-                    {
-                        byte[] buffer = new byte[10485760]; // read in chunks of 10MB
-                        int bytesRead;
-                        while ((bytesRead = plainStream.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            swEncrypt.Write(buffer, 0, bytesRead);
-                        }
-                    }
-                }
+                CryptoTransformStream(plainStream,encryptedStream,encryptor);
                 
                 var encryptedKeys = new Dictionary<string, EncryptedAesKey>();
                 foreach (var receiver in receiversList)
@@ -84,18 +73,7 @@ namespace Inzynierka_Core
                     var decryptedStream = new MemoryStream();
                     using (var innerEncryptedStream = new MemoryStream(encryptedStream.ToArray()))
                     {
-                        using (CryptoStream csDecrypt = new CryptoStream(innerEncryptedStream, decryptor, CryptoStreamMode.Read))
-                        {
-                            using (var binaryWriter = new BinaryWriter(decryptedStream))
-                            {
-                                byte[] buffer = new byte[10485760]; // read in chunks of 10MB
-                                int bytesRead;
-                                while ((bytesRead = csDecrypt.Read(buffer, 0, buffer.Length)) > 0)
-                                {
-                                    binaryWriter.Write(buffer, 0, bytesRead);
-                                }
-                            }
-                        }   
+                        CryptoTransformStream(innerEncryptedStream, decryptedStream, decryptor);
                     }
 
                     return new MemoryStream(decryptedStream.ToArray());
@@ -127,6 +105,22 @@ namespace Inzynierka_Core
                 rsa.ImportParameters(senderKey);
 
                 return rsa.VerifyData(memoryStreamToVerify, signedBytes,HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            }
+        }
+
+        private static void CryptoTransformStream(MemoryStream inStream,MemoryStream outStream, ICryptoTransform cryptoTransform)
+        {
+            using (CryptoStream decrypt = new CryptoStream(inStream, cryptoTransform, CryptoStreamMode.Read))
+            {
+                using (var binaryWriter = new BinaryWriter(outStream))
+                {
+                    byte[] buffer = new byte[10485760]; // read in chunks of 10MB
+                    int bytesRead;
+                    while ((bytesRead = decrypt.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        binaryWriter.Write(buffer, 0, bytesRead);
+                    }
+                }
             }
         }
     }

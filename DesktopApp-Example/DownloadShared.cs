@@ -62,6 +62,8 @@ namespace DesktopApp_Example
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
 
+                        loader.Close();
+                        SwitchFormEnabled(true);
                         return;
                     }
 

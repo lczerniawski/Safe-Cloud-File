@@ -76,11 +76,7 @@ namespace DesktopApp_Example.Services
             if (jsonStream == null)
                 throw new Exception("Error while downloading json file!");
 
-            var streamReader = new StreamReader(jsonStream);
-            var jsonString = streamReader.ReadToEnd();
-            var fileData = JsonConvert.DeserializeObject<FileData>(jsonString);
-            if (!fileData.UserKeys.ContainsKey(receiverEmail))
-                throw new Exception("User can't decrypt this file!");
+            var fileData = FileDataHelpers.DownloadFileData(jsonStream, receiverEmail);
 
             var encryptedStream = await DownloadFile(file.Id) as MemoryStream;
             if (encryptedStream == null)
@@ -110,11 +106,7 @@ namespace DesktopApp_Example.Services
             if (jsonStream == null)
                 throw new Exception("Error while downloading json file!");
 
-            var streamReader = new StreamReader(jsonStream);
-            var jsonString = streamReader.ReadToEnd();
-            var fileData = JsonConvert.DeserializeObject<FileData>(jsonString);
-            if (!fileData.UserKeys.ContainsKey(receiverEmail))
-                throw new Exception("User can't decrypt this file!");
+            var fileData = FileDataHelpers.DownloadFileData(jsonStream, receiverEmail);
 
             var encryptedStream = await GetFileStream(encryptedFileLink) as MemoryStream;
             if (encryptedStream == null)

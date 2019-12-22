@@ -72,18 +72,5 @@ namespace DesktopApp_Example.Helpers
                 return authResult.AccessToken;
             }
         }
-
-        /// <summary>
-        /// Signs the user out of the service.
-        /// </summary>
-        public static void SignOut()
-        {
-            foreach (var user in IdentityClientApp.GetAccountsAsync().Result)
-            {
-                IdentityClientApp.RemoveAsync(user);
-            }
-
-            graphClient = null;
-        }
     }
 }

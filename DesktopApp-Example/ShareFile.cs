@@ -31,8 +31,7 @@ namespace DesktopApp_Example
         {
             if (checkBoxShare.Checked)
             {
-                buttonNext.Enabled = false;
-                listBoxUsers.Enabled = true;
+                ChangeFormStatus(false);
                 var loader = new Loader("Pobieranie listy użytkowników",
                     "Trwa pobieranie listy użytkowników, proszę czekać!");
                 loader.ControlBox = false;
@@ -47,8 +46,7 @@ namespace DesktopApp_Example
                     MessageBox.Show("Błąd podczas pobierania listy użytkowników aplikacji. Sprobój ponownie pózniej!",
                         "Błąd pobierania listy użytkowników", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    buttonNext.Enabled = true;
-                    listBoxUsers.Enabled = false;
+                    ChangeFormStatus(true);
                     checkBoxShare.Checked = false;
                     Invoke(new Action(loader.Close));
                     return;
@@ -57,8 +55,7 @@ namespace DesktopApp_Example
             }
             else
             {
-                buttonNext.Enabled = true;
-                listBoxUsers.Enabled = false;
+                ChangeFormStatus(true);
             }
         }
 
@@ -93,6 +90,12 @@ namespace DesktopApp_Example
         private void listBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
             buttonNext.Enabled = listBoxUsers.SelectedItems.Count > 0;
+        }
+
+        private void ChangeFormStatus(bool isActive)
+        {
+            buttonNext.Enabled = isActive;
+            listBoxUsers.Enabled = !isActive;
         }
     }
 }

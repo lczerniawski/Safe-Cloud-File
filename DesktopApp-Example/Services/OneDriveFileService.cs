@@ -68,12 +68,7 @@ namespace DesktopApp_Example.Services
                 if (jsonFileData == null)
                     throw new Exception("Error while downloading json file!");
 
-                jsonFileData.Position = 0;
-                var streamReader = new StreamReader(jsonFileData);
-                var jsonString = streamReader.ReadToEnd();
-                var fileData = JsonConvert.DeserializeObject<FileData>(jsonString);
-                if (!fileData.UserKeys.ContainsKey(receiverEmail))
-                    throw new Exception("User can't decrypt this file!");
+                var fileData = FileDataHelpers.DownloadFileData(jsonFileData, receiverEmail);
 
                 var encryptedStream =
                     await _graphServiceClient.Me.Drive.Special.AppRoot.ItemWithPath(file.Name).Content.Request()
@@ -107,11 +102,7 @@ namespace DesktopApp_Example.Services
             if (jsonStream == null)
                 throw new Exception("Error while downloading json file!");
 
-            var streamReader = new StreamReader(jsonStream);
-            var jsonString = streamReader.ReadToEnd();
-            var fileData = JsonConvert.DeserializeObject<FileData>(jsonString);
-            if (!fileData.UserKeys.ContainsKey(receiverEmail))
-                throw new Exception("User can't decrypt this file!");
+            var fileData = FileDataHelpers.DownloadFileData(jsonStream, receiverEmail);
 
             var encryptedStream = await GetFileStream(encryptedFileLink) as MemoryStream;
             if (encryptedStream == null)

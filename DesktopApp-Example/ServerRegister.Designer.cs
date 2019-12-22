@@ -46,9 +46,10 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 118);
+            this.label1.Location = new System.Drawing.Point(4, 146);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(270, 31);
+            this.label1.Size = new System.Drawing.Size(360, 38);
             this.label1.TabIndex = 0;
             this.label1.Text = "Imię i nazwisko";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -57,9 +58,10 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 178);
+            this.label2.Location = new System.Drawing.Point(4, 220);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(270, 25);
+            this.label2.Size = new System.Drawing.Size(360, 31);
             this.label2.TabIndex = 1;
             this.label2.Text = "Email";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -68,9 +70,10 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(3, 239);
+            this.label3.Location = new System.Drawing.Point(4, 296);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(270, 26);
+            this.label3.Size = new System.Drawing.Size(360, 32);
             this.label3.TabIndex = 2;
             this.label3.Text = "Hasło";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -79,9 +82,10 @@
             // 
             this.buttonRegister.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonRegister.Enabled = false;
-            this.buttonRegister.Location = new System.Drawing.Point(3, 420);
+            this.buttonRegister.Location = new System.Drawing.Point(4, 520);
+            this.buttonRegister.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonRegister.Name = "buttonRegister";
-            this.buttonRegister.Size = new System.Drawing.Size(270, 26);
+            this.buttonRegister.Size = new System.Drawing.Size(360, 29);
             this.buttonRegister.TabIndex = 3;
             this.buttonRegister.Text = "Zarejestruj się";
             this.buttonRegister.UseVisualStyleBackColor = true;
@@ -90,9 +94,10 @@
             // textBoxName
             // 
             this.textBoxName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxName.Location = new System.Drawing.Point(3, 152);
+            this.textBoxName.Location = new System.Drawing.Point(4, 188);
+            this.textBoxName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(270, 20);
+            this.textBoxName.Size = new System.Drawing.Size(360, 22);
             this.textBoxName.TabIndex = 4;
             this.textBoxName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBox_Changed);
@@ -100,9 +105,10 @@
             // textBoxEmail
             // 
             this.textBoxEmail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxEmail.Location = new System.Drawing.Point(3, 206);
+            this.textBoxEmail.Location = new System.Drawing.Point(4, 255);
+            this.textBoxEmail.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxEmail.Name = "textBoxEmail";
-            this.textBoxEmail.Size = new System.Drawing.Size(270, 20);
+            this.textBoxEmail.Size = new System.Drawing.Size(360, 22);
             this.textBoxEmail.TabIndex = 5;
             this.textBoxEmail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBoxEmail.TextChanged += new System.EventHandler(this.textBox_Changed);
@@ -110,10 +116,11 @@
             // textBoxPassword
             // 
             this.textBoxPassword.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxPassword.Location = new System.Drawing.Point(3, 268);
+            this.textBoxPassword.Location = new System.Drawing.Point(4, 332);
+            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
-            this.textBoxPassword.Size = new System.Drawing.Size(270, 20);
+            this.textBoxPassword.Size = new System.Drawing.Size(360, 22);
             this.textBoxPassword.TabIndex = 6;
             this.textBoxPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBoxPassword.TextChanged += new System.EventHandler(this.textBox_Changed);
@@ -123,9 +130,10 @@
             this.labelRegisterErrors.AutoSize = true;
             this.labelRegisterErrors.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelRegisterErrors.ForeColor = System.Drawing.Color.Red;
-            this.labelRegisterErrors.Location = new System.Drawing.Point(3, 0);
+            this.labelRegisterErrors.Location = new System.Drawing.Point(4, 0);
+            this.labelRegisterErrors.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelRegisterErrors.Name = "labelRegisterErrors";
-            this.labelRegisterErrors.Size = new System.Drawing.Size(270, 118);
+            this.labelRegisterErrors.Size = new System.Drawing.Size(360, 146);
             this.labelRegisterErrors.TabIndex = 7;
             this.labelRegisterErrors.Text = "label4";
             this.labelRegisterErrors.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -144,6 +152,7 @@
             this.tableLayoutPanel1.Controls.Add(this.buttonRegister, 0, 8);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 9;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 26.48857F));
@@ -155,7 +164,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 7.695282F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 26.44715F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.082478F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(276, 449);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(368, 553);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // pictureBoxLoading
@@ -163,8 +172,9 @@
             this.pictureBoxLoading.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxLoading.ImageLocation = "Assets/loadingCircle.gif";
             this.pictureBoxLoading.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxLoading.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBoxLoading.Name = "pictureBoxLoading";
-            this.pictureBoxLoading.Size = new System.Drawing.Size(276, 449);
+            this.pictureBoxLoading.Size = new System.Drawing.Size(368, 553);
             this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBoxLoading.TabIndex = 10;
             this.pictureBoxLoading.TabStop = false;
@@ -172,11 +182,12 @@
             // ServerRegister
             // 
             this.AcceptButton = this.buttonRegister;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(276, 449);
+            this.ClientSize = new System.Drawing.Size(368, 553);
             this.Controls.Add(this.pictureBoxLoading);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ServerRegister";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rejestracja";
