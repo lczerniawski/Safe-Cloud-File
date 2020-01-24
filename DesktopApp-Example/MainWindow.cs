@@ -169,6 +169,8 @@ namespace DesktopApp_Example
                         }
                         Invoke(new Action(loader.Close));
                         Invoke(new Action<bool>(SwitchFormEnabled),true);
+                        MessageBox.Show("Plik został poprawnie zapisany na dysku w chmurze", "Plik zapisany",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
@@ -236,8 +238,11 @@ namespace DesktopApp_Example
                     }
                     Invoke(new Action(loader.Close));
                     Invoke(new Action<bool>(SwitchFormEnabled),true);
+                    MessageBox.Show("Plik został pobrany pomyślnie do katalogu " + filePath, "Plik pobrany",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+
         }
 
         private async void usuńToolStripMenuItem_Click(object sender, EventArgs e)
@@ -273,6 +278,8 @@ namespace DesktopApp_Example
             }
             Invoke(new Action(loader.Close));
             Invoke(new Action<bool>(SwitchFormEnabled),true);
+            MessageBox.Show("Plik został usunięty", "Plik usunięty",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private async Task RefreshFileList()
