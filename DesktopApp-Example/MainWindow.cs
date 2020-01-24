@@ -226,8 +226,8 @@ namespace DesktopApp_Example
                             MessageBox.Show("Błąd podczas pobierania pliku z serwera. Sprobój ponownie pózniej!",
                                 "Błąd pobierania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                            loader.Close();
-                            SwitchFormEnabled(true);
+                            Invoke(new Action(loader.Close));
+                            Invoke(new Action<bool>(SwitchFormEnabled),true);
                             return;
                         }
 
@@ -256,8 +256,8 @@ namespace DesktopApp_Example
                 MessageBox.Show("Błąd podczas usuwania pliku z serwera. Sprobój ponownie pózniej!",
                     "Błąd usuwania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                loader.Close();
-                SwitchFormEnabled(true);
+                Invoke(new Action(loader.Close));
+                Invoke(new Action<bool>(SwitchFormEnabled),true);
                 return;
             }
             try

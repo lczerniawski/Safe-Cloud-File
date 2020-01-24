@@ -15,7 +15,7 @@ namespace DesktopApp_Example.DTO
 
         public override string ToString()
         {
-            return Name;
+            return Name + " " + Email;
         }
     }
 }

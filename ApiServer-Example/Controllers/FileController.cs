@@ -58,10 +58,10 @@ namespace ApiServer_Example.Controllers
             }
 
             if (!System.IO.File.Exists(filePath))
-                return BadRequest(new ValidationErrorDto
+                return StatusCode(StatusCodes.Status500InternalServerError, new ValidationErrorDto
                 {
                     TraceId = HttpContext.TraceIdentifier,
-                    Status = StatusCodes.Status400BadRequest.ToString(),
+                    Status = StatusCodes.Status500InternalServerError.ToString(),
                     Errors = new Dictionary<string, string[]>
                     {
                         { "IOError",new[]{"Błąd podczas zapisywania pliku na serwerze!"}}
@@ -185,10 +185,10 @@ namespace ApiServer_Example.Controllers
             var filePath = Path.Combine(userPath,file.FileName + file.FileType);
 
             if (!System.IO.File.Exists(filePath))
-                return BadRequest(new ValidationErrorDto
+                return StatusCode(StatusCodes.Status500InternalServerError, new ValidationErrorDto
                 {
                     TraceId = HttpContext.TraceIdentifier,
-                    Status = StatusCodes.Status400BadRequest.ToString(),
+                    Status = StatusCodes.Status500InternalServerError.ToString(),
                     Errors = new Dictionary<string, string[]>
                     {
                         { "IOError",new[]{"Błąd podczas usuwania pliku z serwera!"}}
