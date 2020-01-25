@@ -150,7 +150,7 @@ namespace DesktopApp_Example
                         {
                             shareLinks = await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters(),isShared);
                         }
-                        catch (Exception dasdasde)
+                        catch (Exception)
                         {
                             MessageBox.Show("Błąd podczas dodawania pliku na serwer. Sprobój ponownie pózniej!",
                                 "Błąd dodawania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
