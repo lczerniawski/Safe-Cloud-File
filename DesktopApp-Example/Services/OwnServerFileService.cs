@@ -20,7 +20,7 @@ namespace DesktopApp_Example.Services
     public class OwnServerFileService : IFileService
     {
         private readonly AuthData _authData;
-        private readonly string BaseUrl = "https://apiserver-example.azurewebsites.net";
+        private readonly string BaseUrl = "https://localhost:44386";
 
         public OwnServerFileService(AuthData authData)
         {
@@ -29,25 +29,29 @@ namespace DesktopApp_Example.Services
 
         public async Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey,bool isShared)
         {
-            var memoryStream = new MemoryStream();
-            fileStream.CopyTo(memoryStream);
+            using (var inputStream = new MemoryStream())
+            using (var outputStream = new MemoryStream())
+            {
+                fileStream.CopyTo(inputStream);
 
-            var encryptedFile = SafeCloudFile.Encrypt(memoryStream, receivers);
-            memoryStream.Dispose();
+                var userKeys = SafeCloudFile.Encrypt(inputStream,outputStream, receivers);
+                inputStream.Dispose();
 
-            var fileSign = SafeCloudFile.SignFile(encryptedFile.EncryptedStream, senderKey);
-            var fileData = new FileData(fileSign,encryptedFile.UserKeys,new SenderPublicKey(senderKey.Exponent,senderKey.Modulus),fileName+fileExtension);
-            var fileDataJson = JsonConvert.SerializeObject(fileData);
+                var fileSign = SafeCloudFile.SignFile(outputStream, senderKey);
+                var fileData = new FileData(fileSign, userKeys,
+                    new SenderPublicKey(senderKey.Exponent, senderKey.Modulus), fileName + fileExtension);
+                var fileDataJson = JsonConvert.SerializeObject(fileData);
 
-            var uploadJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream(),isShared);
-            if (uploadJsonFileDto == null)
-                throw new Exception("Error while uploading file!");
+                var uploadJsonFileDto = await UploadJson(fileName, fileDataJson.GenerateStream(), isShared);
+                if (uploadJsonFileDto == null)
+                    throw new Exception("Error while uploading file!");
 
-            var uploadFile = await UploadFile(fileName, fileExtension, encryptedFile.EncryptedStream,uploadJsonFileDto.Id,isShared);
-            if(uploadFile == null)
-                throw new Exception("Error while uploading file!");
+                var uploadFile = await UploadFile(fileName, fileExtension, outputStream,uploadJsonFileDto.Id, isShared);
+                if (uploadFile == null)
+                    throw new Exception("Error while uploading file!");
 
-            return new ShareLinksDto(uploadFile.ShareLink, uploadJsonFileDto.ShareLink);
+                return new ShareLinksDto(uploadFile.ShareLink, uploadJsonFileDto.ShareLink);
+            }
         }
 
         public async Task<List<ViewFile>> GetAllFiles()
@@ -72,62 +76,58 @@ namespace DesktopApp_Example.Services
 
         public async Task<MemoryStream> DownloadFile(string path, ViewFile file, string receiverEmail, RSAParameters receiverKey)
         {
-            var jsonStream = await DownloadFile(file.JsonFileId);
-            if (jsonStream == null)
-                throw new Exception("Error while downloading json file!");
-
-            var fileData = FileDataHelpers.DownloadFileData(jsonStream, receiverEmail);
-
-            var encryptedStream = await DownloadFile(file.Id) as MemoryStream;
-            if (encryptedStream == null)
-                throw new Exception("Error while downloading encrypted file!");
-
-            var senderKey = new RSAParameters
+            using (var encryptedStream = new MemoryStream())
+            using (var jsonFileData = new MemoryStream())
             {
-                Exponent = fileData.SenderPublicKey.Expontent,
-                Modulus = fileData.SenderPublicKey.Modulus
-            };
-            var isValid = SafeCloudFile.VerifySignedFile(encryptedStream, fileData.FileSign, senderKey);
-            if (!isValid)
-                throw new Exception("Invalid file sign!");
+                var decryptedStream = new MemoryStream();
+                await DownloadFile(file.JsonFileId,jsonFileData);
 
-            var decryptedStream =
-                SafeCloudFile.Decrypt(encryptedStream, fileData.UserKeys[receiverEmail], receiverKey);
+                var fileData = FileDataHelpers.DownloadFileData(jsonFileData, receiverEmail);
 
-            jsonStream.Close();
-            encryptedStream.Close();
+                await DownloadFile(file.Id, encryptedStream);
+                var senderKey = new RSAParameters
+                {
+                    Exponent = fileData.SenderPublicKey.Expontent,
+                    Modulus = fileData.SenderPublicKey.Modulus
+                };
+                var isValid = SafeCloudFile.VerifySignedFile(encryptedStream, fileData.FileSign, senderKey);
+                if (!isValid)
+                    throw new Exception("Invalid file sign!");
 
-            return decryptedStream;
+                SafeCloudFile.Decrypt(encryptedStream, decryptedStream, fileData.UserKeys[receiverEmail], receiverKey);
+
+                return decryptedStream;
+            }
         }
 
         public async Task<SharedDownload> DownloadShared(string encryptedFileLink, string jsonFileLink,string receiverEmail, RSAParameters receiverKey)
         {
-            var jsonStream = await GetFileStream(jsonFileLink);
-            if (jsonStream == null)
-                throw new Exception("Error while downloading json file!");
-
-            var fileData = FileDataHelpers.DownloadFileData(jsonStream, receiverEmail);
-
-            var encryptedStream = await GetFileStream(encryptedFileLink) as MemoryStream;
-            if (encryptedStream == null)
-                throw new Exception("Error while downloading encrypted file!");
-
-            var senderKey = new RSAParameters
+            using (var jsonStream = new MemoryStream())
+            using (var encryptedStream = new MemoryStream())
             {
-                Exponent = fileData.SenderPublicKey.Expontent,
-                Modulus = fileData.SenderPublicKey.Modulus
-            };
-            var isValid = SafeCloudFile.VerifySignedFile(encryptedStream, fileData.FileSign, senderKey);
-            if (!isValid)
-                throw new Exception("Invalid file sign!");
+                var decryptedStream = new MemoryStream();
+                await GetFileStream(jsonFileLink,jsonStream);
 
-            var decryptedStream =
-                SafeCloudFile.Decrypt(encryptedStream, fileData.UserKeys[receiverEmail], receiverKey);
+                var fileData = FileDataHelpers.DownloadFileData(jsonStream, receiverEmail);
 
-            jsonStream.Close();
-            encryptedStream.Close();
+                await GetFileStream(encryptedFileLink,encryptedStream);
 
-            return new SharedDownload(decryptedStream,fileData.FileName);
+                var senderKey = new RSAParameters
+                {
+                    Exponent = fileData.SenderPublicKey.Expontent,
+                    Modulus = fileData.SenderPublicKey.Modulus
+                };
+                var isValid = SafeCloudFile.VerifySignedFile(encryptedStream, fileData.FileSign, senderKey);
+                if (!isValid)
+                    throw new Exception("Invalid file sign!");
+
+                SafeCloudFile.Decrypt(encryptedStream, decryptedStream, fileData.UserKeys[receiverEmail], receiverKey);
+
+                jsonStream.Close();
+                encryptedStream.Close();
+
+                return new SharedDownload(decryptedStream, fileData.FileName);
+            }
         }
 
         public async Task DeleteFile(ViewFile file)
@@ -183,7 +183,7 @@ namespace DesktopApp_Example.Services
             }
         }
 
-        private async Task<Stream> DownloadFile(string fileId)
+        private async Task DownloadFile(string fileId, Stream outputStream)
         {
             using (var client = new HttpClient())
             {
@@ -194,8 +194,8 @@ namespace DesktopApp_Example.Services
                     throw new Exception("Error while downloading file!");
 
                 var stream = await result.Content.ReadAsStreamAsync();
-
-                return stream;
+                await stream.CopyToAsync(outputStream);
+                stream.Dispose();
             }
         }
 
@@ -211,14 +211,14 @@ namespace DesktopApp_Example.Services
             }
         }
 
-        private async Task<Stream> GetFileStream(string fileLink)
+        private async Task GetFileStream(string fileLink, Stream outputStream)
         {
             using (var client = new HttpClient())
             {
                 var result = await client.GetAsync(fileLink);
                 var stream = await result.Content.ReadAsStreamAsync();
-
-                return stream;
+                await stream.CopyToAsync(outputStream);
+                stream.Dispose();
             }
         }
     }

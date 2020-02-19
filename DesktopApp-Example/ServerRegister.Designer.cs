@@ -83,7 +83,7 @@
             this.buttonRegister.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonRegister.Enabled = false;
             this.buttonRegister.Location = new System.Drawing.Point(4, 520);
-            this.buttonRegister.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonRegister.Margin = new System.Windows.Forms.Padding(4);
             this.buttonRegister.Name = "buttonRegister";
             this.buttonRegister.Size = new System.Drawing.Size(360, 29);
             this.buttonRegister.TabIndex = 3;
@@ -95,7 +95,7 @@
             // 
             this.textBoxName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxName.Location = new System.Drawing.Point(4, 188);
-            this.textBoxName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxName.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(360, 22);
             this.textBoxName.TabIndex = 4;
@@ -106,7 +106,7 @@
             // 
             this.textBoxEmail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxEmail.Location = new System.Drawing.Point(4, 255);
-            this.textBoxEmail.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxEmail.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new System.Drawing.Size(360, 22);
             this.textBoxEmail.TabIndex = 5;
@@ -117,7 +117,7 @@
             // 
             this.textBoxPassword.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxPassword.Location = new System.Drawing.Point(4, 332);
-            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(360, 22);
@@ -152,7 +152,7 @@
             this.tableLayoutPanel1.Controls.Add(this.buttonRegister, 0, 8);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 9;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 26.48857F));
@@ -172,7 +172,7 @@
             this.pictureBoxLoading.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxLoading.ImageLocation = "Assets/loadingCircle.gif";
             this.pictureBoxLoading.Location = new System.Drawing.Point(0, 0);
-            this.pictureBoxLoading.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBoxLoading.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBoxLoading.Name = "pictureBoxLoading";
             this.pictureBoxLoading.Size = new System.Drawing.Size(368, 553);
             this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -187,7 +187,7 @@
             this.ClientSize = new System.Drawing.Size(368, 553);
             this.Controls.Add(this.pictureBoxLoading);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ServerRegister";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rejestracja";

@@ -11,7 +11,7 @@ namespace DesktopApp_Example
 {
     public static class ServerConnectionLogic
     {
-        private static string _baseUrl = "https://apiserver-example.azurewebsites.net";
+        private static string _baseUrl = "https://localhost:44386";
         public static async Task<HttpResponseMessage> LoginUser(string email, string password)
         {
             using (var client = new HttpClient())

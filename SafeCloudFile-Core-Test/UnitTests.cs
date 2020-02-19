@@ -14,7 +14,11 @@ namespace Inzynierka_Core_Test
         [TestMethod]
         public void EncryptAndDecryptTest()
         {
+            //Tworzymy instancje RSA w celu pozyskania kluczy
             using (var rsa = new RSACryptoServiceProvider())
+            using (var encryptedStream = new MemoryStream())
+            using (var decryptedStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 var expected = "Testowy ciag znakow";
                 var receivers = new List<Receiver>
@@ -22,26 +26,21 @@ namespace Inzynierka_Core_Test
                     new Receiver("test", "test@o2.pl", rsa.ExportParameters(false))
                 };
 
-                var memoryStream = new MemoryStream();
-                var streamWriter = new StreamWriter(memoryStream);
-                streamWriter.Write(expected);
-                streamWriter.Flush();
+                using (var streamWriter = new StreamWriter(memoryStream))
+                using (var streamReader = new StreamReader(decryptedStream))
+                {
+                    streamWriter.Write(expected);
+                    streamWriter.Flush();
 
-                var encryptedFile = SafeCloudFile.Encrypt(memoryStream, receivers);
-                var decryptedStream = SafeCloudFile.Decrypt(encryptedFile.EncryptedStream,
-                    encryptedFile.UserKeys["test@o2.pl"], rsa.ExportParameters(true));
+                    var userKeys = SafeCloudFile.Encrypt(memoryStream, encryptedStream, receivers);
+                    SafeCloudFile.Decrypt(encryptedStream, decryptedStream, userKeys["test@o2.pl"],
+                        rsa.ExportParameters(true));
 
-                var streamReader = new StreamReader(decryptedStream);
+                    decryptedStream.Position = 0;
+                    var actual = streamReader.ReadToEnd();
 
-                var actual = streamReader.ReadToEnd();
-
-                memoryStream.Dispose();
-                streamWriter.Dispose();
-                encryptedFile.EncryptedStream.Dispose();
-                decryptedStream.Dispose();
-                streamReader.Dispose();
-
-                Assert.AreEqual(expected, actual);
+                    Assert.AreEqual(expected, actual);
+                }
             }
         }
 
@@ -49,6 +48,8 @@ namespace Inzynierka_Core_Test
         public void SignAndVerifyTest()
         {
             using (var rsa = new RSACryptoServiceProvider())
+            using (var encryptedStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 var expected = "Testowy ciag znakow";
                 var receivers = new List<Receiver>
@@ -56,21 +57,19 @@ namespace Inzynierka_Core_Test
                     new Receiver("test", "test@o2.pl", rsa.ExportParameters(false))
                 };
 
-                var memoryStream = new MemoryStream();
-                var streamWriter = new StreamWriter(memoryStream);
-                streamWriter.Write(expected);
-                streamWriter.Flush();
+                using (var streamWriter = new StreamWriter(memoryStream))
+                {
+                    streamWriter.Write(expected);
+                    streamWriter.Flush();
 
-                var encryptedFile = SafeCloudFile.Encrypt(memoryStream, receivers);
+                    SafeCloudFile.Encrypt(memoryStream, encryptedStream, receivers);
 
-                var signedData = SafeCloudFile.SignFile(encryptedFile.EncryptedStream,rsa.ExportParameters(true));
-                var isValid = SafeCloudFile.VerifySignedFile(encryptedFile.EncryptedStream, signedData,rsa.ExportParameters(false));
+                    var signedData = SafeCloudFile.SignFile(encryptedStream, rsa.ExportParameters(true));
+                    var isValid =
+                        SafeCloudFile.VerifySignedFile(encryptedStream, signedData, rsa.ExportParameters(false));
 
-                memoryStream.Dispose();
-                streamWriter.Dispose();
-                encryptedFile.EncryptedStream.Dispose();
-
-                Assert.AreEqual(true,isValid);
+                    Assert.AreEqual(true, isValid);
+                }
             }
         }
     }

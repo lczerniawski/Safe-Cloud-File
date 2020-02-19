@@ -12,11 +12,11 @@ namespace Inzynierka_Core
 {
     public static class SafeCloudFile
     {
-        public static EncryptedFile Encrypt(MemoryStream plainStream, List<Receiver> receiversList)
+        public static Dictionary<string, EncryptedAesKey> Encrypt(Stream inputStream,Stream outputStream, List<Receiver> receiversList)
         {
-            if (plainStream == null) throw new ArgumentNullException(nameof(plainStream));
+            if (inputStream == null) throw new ArgumentNullException(nameof(inputStream));
             if (receiversList == null) throw new ArgumentNullException(nameof(receiversList));
-            plainStream.Position = 0;
+            inputStream.Position = 0;
 
             using (Aes aes = Aes.Create())
             {
@@ -26,9 +26,7 @@ namespace Inzynierka_Core
                 aes.GenerateIV();
 
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-
-                var encryptedStream = new MemoryStream();
-                CryptoTransformStream(plainStream,encryptedStream,encryptor);
+                CryptoTransformStream(inputStream,outputStream,encryptor);
                 
                 var encryptedKeys = new Dictionary<string, EncryptedAesKey>();
                 foreach (var receiver in receiversList)
@@ -46,13 +44,13 @@ namespace Inzynierka_Core
                     }
                 }
 
-                return new EncryptedFile(new MemoryStream(encryptedStream.ToArray()), encryptedKeys);
+                return encryptedKeys;
             }
         }
 
-        public static MemoryStream Decrypt(MemoryStream encryptedStream,EncryptedAesKey encryptedAesKey, RSAParameters receiverKey)
+        public static void Decrypt(Stream inputStream,Stream outputStream, EncryptedAesKey encryptedAesKey, RSAParameters receiverKey)
         {
-            if (encryptedStream == null) throw new ArgumentNullException(nameof(encryptedStream));
+            if (inputStream == null) throw new ArgumentNullException(nameof(inputStream));
             if (encryptedAesKey == null) throw new ArgumentNullException(nameof(encryptedAesKey));
 
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
@@ -69,19 +67,13 @@ namespace Inzynierka_Core
                     aes.IV = decryptedIv;
 
                     ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-
-                    var decryptedStream = new MemoryStream();
-                    using (var innerEncryptedStream = new MemoryStream(encryptedStream.ToArray()))
-                    {
-                        CryptoTransformStream(innerEncryptedStream, decryptedStream, decryptor);
-                    }
-
-                    return new MemoryStream(decryptedStream.ToArray());
+                    inputStream.Position = 0;
+                    CryptoTransformStream(inputStream, outputStream, decryptor);
                 }
             }
         }
 
-        public static byte[] SignFile(MemoryStream memoryStreamToSign,RSAParameters senderKey)
+        public static byte[] SignFile(Stream memoryStreamToSign,RSAParameters senderKey)
         {
             if (memoryStreamToSign == null) throw new ArgumentNullException(nameof(memoryStreamToSign));
 
@@ -94,7 +86,7 @@ namespace Inzynierka_Core
             }
         }
 
-        public static bool VerifySignedFile(MemoryStream memoryStreamToVerify,byte[] signedBytes, RSAParameters senderKey)
+        public static bool VerifySignedFile(Stream memoryStreamToVerify,byte[] signedBytes, RSAParameters senderKey)
         {
             if (memoryStreamToVerify == null) throw new ArgumentNullException(nameof(memoryStreamToVerify));
             if (signedBytes == null) throw new ArgumentNullException(nameof(signedBytes));
@@ -108,11 +100,11 @@ namespace Inzynierka_Core
             }
         }
 
-        private static void CryptoTransformStream(MemoryStream inStream,MemoryStream outStream, ICryptoTransform cryptoTransform)
+        private static void CryptoTransformStream(Stream inStream,Stream outStream, ICryptoTransform cryptoTransform)
         {
             using (CryptoStream decrypt = new CryptoStream(inStream, cryptoTransform, CryptoStreamMode.Read))
             {
-                using (var binaryWriter = new BinaryWriter(outStream))
+                using (var binaryWriter = new BinaryWriter(outStream,Encoding.UTF8,true))
                 {
                     byte[] buffer = new byte[10485760]; // read in chunks of 10MB
                     int bytesRead;
