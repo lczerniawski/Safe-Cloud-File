@@ -11,7 +11,7 @@ namespace DesktopApp_Example
 {
     public static class ServerConnectionLogic
     {
-        private static string _baseUrl = "https://localhost:44386";
+        private const string _baseUrl = "http://localhost:57640";
         public static async Task<HttpResponseMessage> LoginUser(string email, string password)
         {
             using (var client = new HttpClient())
@@ -26,11 +26,11 @@ namespace DesktopApp_Example
             }
         }
 
-        public static async Task<HttpResponseMessage> RegisterUser(string name, string email, string password)
+        public static async Task<HttpResponseMessage> RegisterUser(string email, string password)
         {
             using (var client = new HttpClient())
             {
-                var registerDto = new RegisterDto(name,email, password);
+                var registerDto = new RegisterDto(email, password);
                 var jsonLoginDto = JsonConvert.SerializeObject(registerDto);
 
                 var content = new StringContent(jsonLoginDto,Encoding.UTF8,"application/json");

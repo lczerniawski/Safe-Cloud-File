@@ -20,7 +20,7 @@ namespace DesktopApp_Example.Services
     public class OwnServerFileService : IFileService
     {
         private readonly AuthData _authData;
-        private readonly string BaseUrl = "https://localhost:44386";
+        private readonly string BaseUrl = "http://localhost:57640";
 
         public OwnServerFileService(AuthData authData)
         {

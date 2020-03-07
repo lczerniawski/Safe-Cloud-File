@@ -43,7 +43,6 @@ namespace ApiSever_Example_Test.Services
             {
                 Id = userGuid,
                 Email = "test@test.pl",
-                Name = "Testowy",
                 PasswordHash = "AQAAAAEAACcQAAAAECGIYx+DgbVREs4dVy7Oy0sL6xp4KVl9WrGjcmfxteov7nXpspqWNWCa3e+FUJ/sLQ==",
                 RsaKeys = null
             };
@@ -61,13 +60,6 @@ namespace ApiSever_Example_Test.Services
             return new AuthService(this._mockConfiguration.Object,this._mockUserRepository.Object);
         }
 
-        private static double ConvertToUnixTimestamp(DateTime date)
-        {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            TimeSpan diff = date.ToUniversalTime() - origin;
-            return Math.Floor(diff.TotalSeconds);
-        }
-
         [TestMethod]
         public async Task GetAuthData_WithCorrectGuid_Success()
         {
@@ -78,7 +70,7 @@ namespace ApiSever_Example_Test.Services
             var result = await service.GetAuthData(_user.Id);
 
             // Assert
-            Assert.AreEqual(result.Id,_user.Id.ToString());
+            Assert.AreEqual(result.Email,_user.Email);
         }
 
         [TestMethod]

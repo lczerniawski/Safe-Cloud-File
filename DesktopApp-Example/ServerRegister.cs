@@ -26,13 +26,12 @@ namespace DesktopApp_Example
             labelRegisterErrors.Text = String.Empty;
             pictureBoxLoading.Visible = true;
 
-            var name = textBoxName.Text;
             var email = textBoxEmail.Text;
             var password = textBoxPassword.Text;
 
             try
             {
-                var response = await ServerConnectionLogic.RegisterUser(name, email, password);
+                var response = await ServerConnectionLogic.RegisterUser(email, password);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
@@ -59,7 +58,7 @@ namespace DesktopApp_Example
 
         private void textBox_Changed(object sender, EventArgs e)
         {
-            buttonRegister.Enabled = textBoxEmail.Text.Length > 0 && textBoxPassword.Text.Length > 0 && textBoxName.Text.Length > 0;
+            buttonRegister.Enabled = textBoxEmail.Text.Length > 0 && textBoxPassword.Text.Length > 0;
         }
     }
 }

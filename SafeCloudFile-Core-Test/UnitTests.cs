@@ -23,7 +23,7 @@ namespace Inzynierka_Core_Test
                 var expected = "Testowy ciag znakow";
                 var receivers = new List<Receiver>
                 {
-                    new Receiver("test", "test@o2.pl", rsa.ExportParameters(false))
+                    new Receiver("test@o2.pl", rsa.ExportParameters(false))
                 };
 
                 using (var streamWriter = new StreamWriter(memoryStream))
@@ -54,7 +54,7 @@ namespace Inzynierka_Core_Test
                 var expected = "Testowy ciag znakow";
                 var receivers = new List<Receiver>
                 {
-                    new Receiver("test", "test@o2.pl", rsa.ExportParameters(false))
+                    new Receiver("test@o2.pl", rsa.ExportParameters(false))
                 };
 
                 using (var streamWriter = new StreamWriter(memoryStream))

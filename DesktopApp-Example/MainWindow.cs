@@ -114,12 +114,12 @@ namespace DesktopApp_Example
             {
                 var receiverList = new List<Receiver>
                 {
-                    new Receiver(_authData.Name, _authData.Email, _authData.RsaKeys.MapToRsaParameters())
+                    new Receiver(_authData.Email, _authData.RsaKeys.MapToRsaParameters())
                 };
 
                 foreach (var shareFileSelectedUser in shareFile.SelectedUsers)
                 {
-                    receiverList.Add(new Receiver(shareFileSelectedUser.Name,shareFileSelectedUser.Email, new RSAParameters
+                    receiverList.Add(new Receiver(shareFileSelectedUser.Email, new RSAParameters
                     {
                         Modulus = shareFileSelectedUser.Modulus,
                         Exponent = shareFileSelectedUser.Exponent

@@ -31,7 +31,6 @@ namespace ApiServer_Example.Controllers
                 result.Add(new UserDto
                 {
                     Email = user.Email,
-                    Name = user.Name,
                     Modulus = user.RsaKeys.Modulus,
                     Exponent = user.RsaKeys.Exponent
                 });

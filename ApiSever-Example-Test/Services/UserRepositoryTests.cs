@@ -28,7 +28,6 @@ namespace ApiSever_Example_Test.Services
             {
                 Id = _userGuid,
                 Email = "test@test.pl",
-                Name = "Test",
                 PasswordHash = "AQAAAAEAACcQAAAAECGIYx+DgbVREs4dVy7Oy0sL6xp4KVl9WrGjcmfxteov7nXpspqWNWCa3e+FUJ/sLQ==",
                 RsaKeys = null
             };
@@ -98,7 +97,6 @@ namespace ApiSever_Example_Test.Services
             User user = new User
             {
                 Email = "testing@test.pl",
-                Name = "Asdaw",
                 PasswordHash = "dadda",
                 RsaKeys = null
             };
