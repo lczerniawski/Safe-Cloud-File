@@ -10,6 +10,5 @@ namespace ApiServer_Example.Domains.DTO
         public RSAKeys RsaKeys { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
-        public string Id { get; set; }
     }
 }
