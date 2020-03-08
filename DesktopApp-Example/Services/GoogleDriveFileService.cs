@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DesktopApp_Example.DTO;
 using DesktopApp_Example.Helpers;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Download;
 using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
@@ -33,8 +34,8 @@ namespace DesktopApp_Example.Services
             var credentialPath = "token.json";
             var clientSecrets = new ClientSecrets
             {
-                ClientId = "158037173377-tdaq0rn5eha2lcg2p1d06nmcgg2ishui.apps.googleusercontent.com",
-                ClientSecret = "C4L0BQGRM9KE6vKWeBcgTlEi"
+                ClientId = "Your GoogleCloudPlatform OAuth ID",
+                ClientSecret = "Your GoogleCloudPlatform OAuth Secret"
             };
 
             CancellationTokenSource cts = new CancellationTokenSource();
