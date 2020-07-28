@@ -62,7 +62,7 @@ namespace DesktopApp_Example.Services
             return result;
         }
 
-        public async Task<MemoryStream> DownloadFile(string path, ViewFile file, string receiverEmail, RSAParameters receiverKey)
+        public async Task<MemoryStream> DownloadFile(ViewFile file, string receiverEmail, RSAParameters receiverKey)
         {
             var decryptedStream = new MemoryStream();
             var jsonFileData = await _graphServiceClient.Me.Drive.Special.AppRoot

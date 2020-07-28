@@ -20,64 +20,54 @@ namespace DesktopApp_Example
         private readonly AuthData _authData;
         private readonly IFileService _fileService;
 
-        public DownloadShared(AuthData authData,IFileService fileService)
+        public DownloadShared(AuthData authData, IFileService fileService)
         {
             _authData = authData;
             _fileService = fileService;
             InitializeComponent();
         }
 
-        private async void buttonDownload_Click(object sender, EventArgs e)
+        private void buttonDownload_Click(object sender, EventArgs e)
         {
-            using (var folderBrowserDialog = new FolderBrowserDialog())
+
+            var loader = new Loader("Pobieranie w toku", "Trwa pobieranie pliku, proszę czekać!");
+            loader.ControlBox = false;
+            loader.Owner = this;
+            loader.Show();
+            SwitchFormEnabled(false);
+            SharedDownload sharedDownload = null;
+            try
             {
-                if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                sharedDownload =  _fileService.DownloadShared(textBoxFileLink.Text, textBoxJsonLink.Text, _authData.Email, _authData.RsaKeys.MapToRsaParameters()).Result;
+
+                using (var saveFileDialog = new SaveFileDialog())
                 {
-                    var loader = new Loader("Pobieranie w toku","Trwa pobieranie pliku, proszę czekać!");
-                    loader.ControlBox = false;
-                    loader.Owner = this;
-                    loader.Show();
-                    SwitchFormEnabled(false);
-                    SharedDownload sharedDownload = null;
-                    try
+                    saveFileDialog.Filter = "All files (*.*)|";
+                    saveFileDialog.FileName = sharedDownload.FileName;
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        sharedDownload = await _fileService.DownloadShared(textBoxFileLink.Text, textBoxJsonLink.Text, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show(
-                            "Podane Linki nie są prawidłowe, lub wystapił problem podczas pobierania pliku, sprawdz swoje linki i sproboj ponownie pozniej.",
-                            "Błąd pobierania", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        using (var fileStream = saveFileDialog.OpenFile())
+                        {
+                            sharedDownload.MemoryStream.Position = 0;
+                            sharedDownload.MemoryStream.CopyTo(fileStream);
+                        }
 
-                        loader.Close();
-                        SwitchFormEnabled(true);
-                        return;
+                        Invoke(new Action(loader.Close));
+                        MessageBox.Show("Plik pobrany", "Plik został pobrany pomyślnie!", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                        Invoke(new Action(Close));
                     }
-                    var filePath = folderBrowserDialog.SelectedPath;
-                    if (File.Exists(Path.Combine(filePath,sharedDownload.FileName)))
-                    {
-                        MessageBox.Show(
-                            $"Plik o nazwie {sharedDownload.FileName} istnieje w katalogu docelowym, wybierz inny katalog lub usuń isteniejący plik"
-                            , "Powtarzająca się nazwa",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-
-                        loader.Close();
-                        SwitchFormEnabled(true);
-                        return;
-                    }
-
-                    using (var fileStream = new FileStream(filePath + "/" + sharedDownload.FileName, FileMode.Create))
-                    {
-                        sharedDownload.MemoryStream.Position = 0;
-                        await sharedDownload.MemoryStream.CopyToAsync(fileStream);
-                    }
-
-                    Invoke(new Action(loader.Close));
-                    MessageBox.Show("Plik pobrany", "Plik został pobrany pomyślnie!", MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-                    Invoke(new Action(Close));
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Podane Linki nie są prawidłowe, lub wystapił problem podczas pobierania pliku, sprawdz swoje linki i sproboj ponownie pozniej.",
+                    "Błąd pobierania", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                loader.Close();
+                SwitchFormEnabled(true);
+                return;
             }
         }
 

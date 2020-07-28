@@ -14,7 +14,7 @@ namespace DesktopApp_Example.Services
     {
         Task<ShareLinksDto> UploadFile(string fileName, string fileExtension, FileStream fileStream, List<Receiver> receivers, RSAParameters senderKey,bool isShared);
         Task<List<ViewFile>> GetAllFiles();
-        Task<MemoryStream> DownloadFile(string path,ViewFile file,string receiverEmail,RSAParameters receiverKey);
+        Task<MemoryStream> DownloadFile(ViewFile file,string receiverEmail,RSAParameters receiverKey);
         Task<SharedDownload> DownloadShared(string encryptedFileLink, string jsonFileLink,string receiverEmail, RSAParameters receiverKey);
         Task DeleteFile(ViewFile file);
     }

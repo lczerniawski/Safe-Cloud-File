@@ -138,39 +138,40 @@ namespace DesktopApp_Example
                     {
                         var fileName = openFileDialog.SafeFileName?.Split('.').First();
                         var fileExtension = Path.GetExtension(openFileDialog.FileName);
-                        var fileStream = openFileDialog.OpenFile() as FileStream;
-
-                        var loader = new Loader("Uploadowanie w toku","Trwa uploadowanie pliku, proszę czekać!");
-                        loader.ControlBox = false;
-                        loader.Owner = this;
-                        loader.Show();
-                        SwitchFormEnabled(false);
-                        ShareLinksDto shareLinks = null;
-                        try
+                        using (var fileStream = openFileDialog.OpenFile() as FileStream)
                         {
-                            shareLinks = await _fileService.UploadFile(fileName, fileExtension,fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters(),isShared);
-                        }
-                        catch (Exception)
-                        {
-                            MessageBox.Show("Błąd podczas dodawania pliku na serwer. Sprobój ponownie pózniej!",
-                                "Błąd dodawania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            var loader = new Loader("Uploadowanie w toku", "Trwa uploadowanie pliku, proszę czekać!");
+                            loader.ControlBox = false;
+                            loader.Owner = this;
+                            loader.Show();
+                            SwitchFormEnabled(false);
+                            ShareLinksDto shareLinks = null;
+                            try
+                            {
+                                shareLinks = await _fileService.UploadFile(fileName, fileExtension, fileStream, receiverList, _authData.RsaKeys.MapToRsaParameters(), isShared);
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Błąd podczas dodawania pliku na serwer. Sprobój ponownie pózniej!",
+                                    "Błąd dodawania pliku", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                                Invoke(new Action(loader.Close));
+                                Invoke(new Action<bool>(SwitchFormEnabled), true);
+                                return;
+                            }
+                            await RefreshFileList();
+                            if (isShared)
+                            {
+                                var linksToShareWindow = new LinksToShare(shareLinks.JsonFileLink, shareLinks.EncryptedFileLink);
+                                linksToShareWindow.ControlBox = false;
+                                linksToShareWindow.Owner = this;
+                                Invoke(new Action(linksToShareWindow.Show));
+                            }
                             Invoke(new Action(loader.Close));
                             Invoke(new Action<bool>(SwitchFormEnabled), true);
-                            return;
+                            MessageBox.Show("Plik został poprawnie zapisany na dysku w chmurze", "Plik zapisany",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-                        await RefreshFileList();
-                        if (isShared)
-                        {
-                            var linksToShareWindow = new LinksToShare(shareLinks.JsonFileLink, shareLinks.EncryptedFileLink);
-                            linksToShareWindow.ControlBox = false;
-                            linksToShareWindow.Owner = this;
-                            Invoke(new Action(linksToShareWindow.Show));
-                        }
-                        Invoke(new Action(loader.Close));
-                        Invoke(new Action<bool>(SwitchFormEnabled),true);
-                        MessageBox.Show("Plik został poprawnie zapisany na dysku w chmurze", "Plik zapisany",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
@@ -195,33 +196,23 @@ namespace DesktopApp_Example
 
         private async void pobierzToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var folderBrowserDialog = new FolderBrowserDialog())
+            using (var saveFileDialog = new SaveFileDialog())
             {
-                if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                saveFileDialog.Filter ="All files (*.*)|";
+                saveFileDialog.FileName = _selectedFile.Name;
+                if(saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    var filePath = folderBrowserDialog.SelectedPath;
-                    if (File.Exists(Path.Combine(filePath,_selectedFile.Name)))
-                    {
-                        MessageBox.Show(
-                            "Plik o takiej nazwie istnieje w katalogu docelowym, wybierz inny katalog lub usuń isteniejący plik"
-                            , "Powtarzająca się nazwa",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-
-                        return;
-                    }
-
                     var loader = new Loader("Pobieranie w toku","Trwa pobieranie pliku, proszę czekać!");
                     loader.ControlBox = false;
                     loader.Owner = this;
                     loader.Show();
                     SwitchFormEnabled(false);
-                    using (var fileStream = new FileStream(filePath + "/" + _selectedFile.Name, FileMode.Create))
+                    using (var fileStream = saveFileDialog.OpenFile())
                     {
                         Stream stream = null;
                         try
                         {
-                            stream = await _fileService.DownloadFile(filePath, _selectedFile, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
+                            stream = await _fileService.DownloadFile(_selectedFile, _authData.Email, _authData.RsaKeys.MapToRsaParameters());
                         }
                         catch (Exception)
                         {
@@ -238,7 +229,7 @@ namespace DesktopApp_Example
                     }
                     Invoke(new Action(loader.Close));
                     Invoke(new Action<bool>(SwitchFormEnabled),true);
-                    MessageBox.Show("Plik został pobrany pomyślnie do katalogu " + filePath, "Plik pobrany",
+                    MessageBox.Show("Plik został pobrany pomyślnie do katalogu " + saveFileDialog.FileName, "Plik pobrany",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
