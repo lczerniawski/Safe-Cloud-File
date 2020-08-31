@@ -3,7 +3,6 @@ using System;
 using ApiServer_Example.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ApiServer_Example.Migrations
@@ -15,32 +14,29 @@ namespace ApiServer_Example.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "3.1.0");
 
             modelBuilder.Entity("ApiServer_Example.Domains.Models.FileModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsShared")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("JsonFileId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -51,15 +47,15 @@ namespace ApiServer_Example.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -71,39 +67,39 @@ namespace ApiServer_Example.Migrations
                     b.OwnsOne("ApiServer_Example.Domains.Models.RSAKeys", "RsaKeys", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uniqueidentifier");
+                                .HasColumnType("TEXT");
 
                             b1.Property<byte[]>("D")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.Property<byte[]>("DP")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.Property<byte[]>("DQ")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.Property<byte[]>("Exponent")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.Property<byte[]>("InverseQ")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.Property<byte[]>("Modulus")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.Property<byte[]>("P")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.Property<byte[]>("Q")
                                 .IsRequired()
-                                .HasColumnType("varbinary(max)");
+                                .HasColumnType("BLOB");
 
                             b1.HasKey("UserId");
 

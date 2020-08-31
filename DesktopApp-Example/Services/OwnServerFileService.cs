@@ -20,7 +20,7 @@ namespace DesktopApp_Example.Services
     public class OwnServerFileService : IFileService
     {
         private readonly AuthData _authData;
-        private readonly string BaseUrl = "http://localhost:57640";
+        private readonly string BaseUrl = "http://localhost:5000";
 
         public OwnServerFileService(AuthData authData)
         {
@@ -66,7 +66,7 @@ namespace DesktopApp_Example.Services
                 var fileList = JsonConvert.DeserializeObject<IEnumerable<FileDto>>(responseString);
                 foreach (var file in fileList)
                 {
-                    if(!file.FileType.Contains(".json"))
+                    if(file.FileType != ".json")
                         result.Add(new ViewFile(file.Id,file.FileName + file.FileType,file.JsonFileId));
                 }
 

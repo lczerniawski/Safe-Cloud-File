@@ -11,7 +11,7 @@ namespace ApiServer_Example.Domains.DTO
     {
         [Required]
         public string FileName { get; set; }
-        [Required] 
+
         public string FileType { get; set; }
         [Required]
         public IFormFile FormFile { get; set; }

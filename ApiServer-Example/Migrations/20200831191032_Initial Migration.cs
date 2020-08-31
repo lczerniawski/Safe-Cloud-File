@@ -13,8 +13,10 @@ namespace ApiServer_Example.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     FileName = table.Column<string>(nullable: false),
-                    FileType = table.Column<string>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
+                    FileType = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
+                    IsShared = table.Column<bool>(nullable: false),
+                    JsonFileId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,7 +28,6 @@ namespace ApiServer_Example.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 250, nullable: false),
                     Email = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: false),
                     RsaKeys_D = table.Column<byte[]>(nullable: true),

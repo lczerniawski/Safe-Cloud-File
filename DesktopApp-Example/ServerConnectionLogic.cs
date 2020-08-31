@@ -11,7 +11,7 @@ namespace DesktopApp_Example
 {
     public static class ServerConnectionLogic
     {
-        private const string _baseUrl = "http://localhost:57640";
+        private const string _baseUrl = "http://localhost:5000";
         public static async Task<HttpResponseMessage> LoginUser(string email, string password)
         {
             using (var client = new HttpClient())

@@ -200,6 +200,8 @@ namespace DesktopApp_Example
             {
                 saveFileDialog.Filter ="All files (*.*)|";
                 saveFileDialog.FileName = _selectedFile.Name;
+                var splitedName = _selectedFile.Name.Split('.');
+                saveFileDialog.DefaultExt = splitedName.Length > 1 ? splitedName[1] : null;
                 if(saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     var loader = new Loader("Pobieranie w toku","Trwa pobieranie pliku, proszę czekać!");

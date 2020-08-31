@@ -50,7 +50,7 @@ namespace ApiServer_Example.Controllers
 
             var user = await _userRepository.GetUserByIdAsync(clientId);
             var userPath =  Path.Combine(Directory.GetCurrentDirectory(), user.Id.ToString());
-            var filePath = Path.Combine(userPath,fileCreateDto.FileName + fileCreateDto.FileType);
+            var filePath = Path.Combine(userPath, fileCreateDto.FileName + fileCreateDto.FileType);
 
             await using (var stream = System.IO.File.Create(filePath))
             {
@@ -69,9 +69,9 @@ namespace ApiServer_Example.Controllers
                 });
 
             FileDto result;
-            if (await _fileRepository.CheckIfFileExist(fileCreateDto.FileName + fileCreateDto.FileType))
+            if (await _fileRepository.CheckIfFileExist(fileCreateDto.FileName, fileCreateDto.FileType))
             {
-                var file = await _fileRepository.GetFileByNameAsync(fileCreateDto.FileName + fileCreateDto.FileType);
+                var file = await _fileRepository.GetFileByNameAsync(fileCreateDto.FileName, fileCreateDto.FileType);
                 _mapper.Map(fileCreateDto, file);
                 var updatedFileModel = await _fileRepository.UpdateFile(file);
                 result = _mapper.Map<FileDto>(updatedFileModel);

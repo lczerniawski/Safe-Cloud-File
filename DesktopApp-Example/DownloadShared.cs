@@ -44,6 +44,8 @@ namespace DesktopApp_Example
                 {
                     saveFileDialog.Filter = "All files (*.*)|";
                     saveFileDialog.FileName = sharedDownload.FileName;
+                    var splitedName = sharedDownload.FileName.Split('.');
+                    saveFileDialog.DefaultExt = splitedName.Length > 1 ? splitedName[1] : null;
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         using (var fileStream = saveFileDialog.OpenFile())

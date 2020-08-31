@@ -14,7 +14,6 @@ namespace ApiServer_Example.Domains.Models
         public Guid Id { get; set; }
         [Required]
         public string FileName { get; set; }
-        [Required] 
         public string FileType { get; set; }
         [Required]
         public Guid UserId { get; set; }

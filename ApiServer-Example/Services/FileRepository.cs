@@ -61,16 +61,18 @@ namespace ApiServer_Example.Services
             return await _context.Files.AsNoTracking().SingleOrDefaultAsync(f => f.Id == id);
         }
 
-        public async Task<FileModel> GetFileByNameAsync(string fullFileName)
+        public async Task<FileModel> GetFileByNameAsync(string fileName, string fileType)
         {
-            if (fullFileName == null) throw new ArgumentNullException(nameof(fullFileName));
-            return await _context.Files.AsNoTracking().SingleOrDefaultAsync(f => f.FileName + f.FileType == fullFileName);
+            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+
+            return await _context.Files.AsNoTracking().SingleOrDefaultAsync(f => f.FileName == fileName && f.FileType == fileType);
         }
 
-        public async Task<bool> CheckIfFileExist(string fullFileName)
+        public async Task<bool> CheckIfFileExist(string fileName, string fileType)
         {
-            if (fullFileName == null) throw new ArgumentNullException(nameof(fullFileName));
-            return await _context.Files.AsNoTracking().SingleOrDefaultAsync(f => f.FileName + f.FileType == fullFileName) != null;
+            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+
+            return await _context.Files.AsNoTracking().AnyAsync(f => f.FileName == fileName && f.FileType == fileType);
         }
     }
 }
