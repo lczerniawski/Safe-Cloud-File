@@ -137,10 +137,12 @@ namespace DesktopApp_Example.Services
             using (var jsonStream = new MemoryStream())
             using (var encryptedStream = new MemoryStream())
             {
+                await GetFileStream(jsonFileLink, jsonStream);
+
                 var decryptedStream = new MemoryStream();
                 var fileData = FileDataHelpers.DownloadFileData(jsonStream, receiverEmail);
 
-                await GetFileStream(encryptedFileLink, decryptedStream);
+                await GetFileStream(encryptedFileLink, encryptedStream);
 
                 var senderKey = new RSAParameters
                 {
