@@ -59,12 +59,20 @@ namespace DesktopApp_Example
                             MessageBoxIcon.Information);
                         Invoke(new Action(Close));
                     }
+                    else
+                    {
+                        MessageBox.Show("Należy wybrać miejsce zapisu.", "Wybierz folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        loader.Close();
+                        SwitchFormEnabled(true);
+                        return;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Podane Linki nie są prawidłowe, lub wystapił problem podczas pobierania pliku, sprawdz swoje linki i sproboj ponownie pozniej.",
+                    "Podane Linki nie są prawidłowe, lub wystapił problem podczas pobierania pliku, sprawdz swoje linki i spróbuj ponownie pozniej.",
                     "Błąd pobierania", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 loader.Close();
