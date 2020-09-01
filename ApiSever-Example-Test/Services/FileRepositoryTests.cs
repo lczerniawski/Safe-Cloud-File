@@ -129,10 +129,11 @@ namespace ApiSever_Example_Test.Services
         {
             // Arrange
             var fileRepository = this.CreateFileRepository();
-            var fullFileName = "Test.jpg";
+            var fileName = "Test";
+            var fileType = ".jpg";
 
             // Act
-            var result = await fileRepository.GetFileByNameAsync(fullFileName);
+            var result = await fileRepository.GetFileByNameAsync(fileName, fileType);
 
             // Assert
             Assert.AreEqual(_fileGuid, result.Id);
@@ -143,10 +144,11 @@ namespace ApiSever_Example_Test.Services
         {
             // Arrange
             var fileRepository = this.CreateFileRepository();
-            var fullFileName = "Test.jpg";
+            var fileName = "Test";
+            var fileType = ".jpg";
 
             // Act
-            var result = await fileRepository.CheckIfFileExist(fullFileName);
+            var result = await fileRepository.CheckIfFileExist(fileName, fileType);
 
             // Assert
             Assert.AreEqual(true,result);
