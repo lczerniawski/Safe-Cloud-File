@@ -39,7 +39,8 @@ public static byte[] SignFile(Stream streamToSign, RSAParameters senderKey)
 Sign file with provided rsa key and returns digital signature as byte array.
 
 ```csharp
-public static bool VerifySignedFile(Stream streamToVerify, byte[] signedBytes, RSAParameters senderKey)
+public static bool VerifySignedFile(Stream streamToVerify, byte[] signedBytes, 
+                                    RSAParameters senderKey)
 ```
 
 Verify signature, returns boolean value indicating is signature is valid.
