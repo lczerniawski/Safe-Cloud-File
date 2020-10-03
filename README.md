@@ -14,6 +14,10 @@ Repository is part of author diploma work.
 
 ![Application Showcase](http://g.recordit.co/YfzWs24djo.gif)
 
+## Prerequsites
+>.NET Core 3.0 <br>
+>.NET Framework 4.7
+
 ## How To Use
 Library provides four self descriptive methods:
 
